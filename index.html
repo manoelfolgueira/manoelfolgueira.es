@@ -17,42 +17,39 @@
                 <span class="font-mono text-xl font-bold tracking-tight text-emerald-400">manoel<span class="text-slate-400">folgueira</span><span class="text-emerald-500">.es</span></span>
             </div>
             <nav class="flex space-x-4 text-xs font-medium text-slate-400">
-                <span class="px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hidden md:inline-block">Finanzas Óptimas</span>
+                <span class="px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hidden md:inline-block">Optimización Financiera</span>
             </nav>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl w-full mx-auto px-4 py-12 flex-grow">
+    <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-grow">
         
-        <!-- Hero Section (Centrada y con Anillo de Marca) -->
-        <section class="mb-14 border-b border-slate-800/60 pb-12 flex flex-col items-center text-center">
+        <!-- Hero Section (Compacta: Foto Izquierda, Texto Derecha) -->
+        <section class="mb-10 border-b border-slate-800/60 pb-8 flex flex-col sm:flex-row items-center sm:items-center gap-6 md:gap-8">
             
-            <!-- Contenedor de la Imagen con Anillo Degradado -->
-            <div class="relative w-28 h-28 md:w-32 md:h-32 mb-6 group mx-auto cursor-default">
-                <!-- Brillo difuminado exterior -->
-                <div class="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 opacity-30 blur-md transition-opacity duration-300 group-hover:opacity-60 z-0"></div>
-                
-                <!-- Anillo sólido degradado -->
+            <!-- Contenedor de la Imagen (Izquierda) -->
+            <div class="relative w-24 h-24 md:w-28 md:h-28 shrink-0 group">
+                <div class="absolute -inset-1 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 opacity-30 blur-md transition-opacity duration-300 group-hover:opacity-60 z-0"></div>
                 <div class="absolute -inset-0.5 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 opacity-90 z-10"></div>
-                
-                <!-- Foto real (Natural) con borde oscuro interior para separarla del anillo -->
-                <img src="resources/img/perfil.jpg" 
-                     alt="Manoel Folgueira" 
-                     class="relative rounded-full object-cover w-full h-full border-4 border-slate-900 z-20 transition-transform duration-300 group-hover:scale-[1.03]">
+                <img src="perfil.jpg" alt="Manoel Folgueira" class="relative rounded-full object-cover w-full h-full border-4 border-slate-900 z-20 transition-transform duration-300 group-hover:scale-105">
             </div>
 
-            <!-- Columna de Texto -->
-            <div class="max-w-2xl">
-                <h2 class="text-3xl font-extrabold text-white tracking-tight mb-4 md:text-4xl leading-tight">
-                    Llevando tu economía personal a su estado óptimo.
+            <!-- Columna de Texto (Derecha) -->
+            <div class="flex-1 text-center sm:text-left">
+                <h2 class="text-2xl font-extrabold text-white tracking-tight mb-2 md:text-3xl">
+                    Llevando tu economía a su estado óptimo.
                 </h2>
-                <p class="text-emerald-400 font-medium text-sm md:text-base mb-4">
-                    Graduado en Ingeniería Informática con Mención en Ingeniería del Software.
+                <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-3">
+                    Graduado en Ingeniería Informática. Comparto las herramientas, plantillas y simuladores que desarrollo para maximizar el patrimonio, controlar el presupuesto y planificar la independencia financiera.
                 </p>
-                <p class="text-slate-400 text-base leading-relaxed">
-                    Aquí comparto los simuladores matemáticos, plantillas y herramientas que desarrollo para maximizar el patrimonio, controlar el presupuesto y planificar la independencia financiera.
-                </p>
+                <!-- Enlace a la Biografía -->
+                <a href="biografia.html" class="inline-flex items-center text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors group/link">
+                    Conocer mi perfil completo
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform group-hover/link:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </a>
             </div>
             
         </section>
