@@ -9,7 +9,6 @@
 </head>
 <body class="min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-slate-900">
 
-    <!-- Header -->
     <header class="border-b border-slate-800 bg-slate-900/70 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-4">
@@ -17,12 +16,10 @@
                     <div class="absolute -inset-0.5 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 opacity-90 z-10"></div>
                     <img src="resources/img/perfil.jpg" alt="Manoel Folgueira" class="relative rounded-full object-cover w-full h-full border-2 border-slate-900 z-20">
                 </div>
-                <span class="font-mono text-lg font-bold tracking-tight text-emerald-400 hidden sm:block">
-                    manoel<span class="text-slate-400">folgueira</span><span class="text-emerald-500">.es</span>
-                </span>
+                <span class="font-mono text-lg font-bold tracking-tight text-emerald-400 hidden sm:block">manoelfolgueira.es</span>
             </div>
             <nav class="flex items-center gap-6 text-sm font-medium text-slate-400">
-                <a href="/" class="hover:text-emerald-400 transition-colors">Dashboard</a>
+                <a href="/" class="text-emerald-400">Dashboard</a>
                 <a href="/bio" class="hover:text-emerald-400 transition-colors">Biografía</a>
                 <a href="https://www.linkedin.com/in/tu-perfil" target="_blank" class="hover:text-emerald-400 transition-colors">LinkedIn</a>
             </nav>
@@ -30,12 +27,37 @@
     </header>
 
     <main class="max-w-4xl w-full mx-auto px-4 py-12">
-        <section class="mb-12">
-            <h1 class="text-3xl font-extrabold text-white mb-3">Llevando tu economía a su estado óptimo.</h1>
-            <p class="text-slate-400 max-w-2xl">Graduado en Ingeniería Informática. Comparto herramientas, plantillas y simuladores que desarrollo para maximizar el patrimonio, controlar el presupuesto y planificar la independencia financiera.</p>
-        </section>
+        <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-6">Recursos Disponibles</h3>
+        <div class="grid gap-6 md:grid-cols-2">
+            
+            <!-- Estrategia FIRE -->
+            <div class="bg-slate-800/30 border border-slate-800/80 rounded-xl p-6">
+                <div class="flex items-center space-x-3 mb-4"><div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">🛡️</div><h4 class="text-lg font-bold text-white">Estrategia FIRE</h4></div>
+                <p class="text-sm text-slate-400 mb-6">Modelos de interés compuesto y proyecciones de gasto deflactado para planificar el retiro anticipado.</p>
+                <a href="#" class="flex items-center justify-between p-3 bg-slate-900/60 rounded-lg border border-slate-800 text-sm"><span class="text-slate-300">Calculadora de Retiro</span><span class="text-xs text-emerald-400 font-mono">.xlsx</span></a>
+            </div>
 
-        <!-- Aquí irían tus bloques de recursos tal como los tenías -->
+            <!-- Fondos Indexados -->
+            <div class="bg-slate-800/30 border border-slate-800/80 rounded-xl p-6">
+                <div class="flex items-center space-x-3 mb-4"><div class="p-2 bg-blue-500/10 text-blue-400 rounded-lg">📈</div><h4 class="text-lg font-bold text-white">Fondos Indexados</h4></div>
+                <p class="text-sm text-slate-400 mb-6">Plantillas de rebalanceo y asignación recurrente para fondos globales (MSCI World y S&P 500).</p>
+                <a href="#" class="flex items-center justify-between p-3 bg-slate-900/60 rounded-lg border border-slate-800 text-sm"><span class="text-slate-300">Modelo de Aportación</span><span class="text-xs text-blue-400 font-mono">Sheets</span></a>
+            </div>
+
+            <!-- Pignoración -->
+            <div class="bg-slate-800/30 border border-slate-800/80 rounded-xl p-6">
+                <div class="flex items-center space-x-3 mb-4"><div class="p-2 bg-amber-500/10 text-amber-400 rounded-lg">🏦</div><h4 class="text-lg font-bold text-white">Pignoración & Crédito</h4></div>
+                <p class="text-sm text-slate-400 mb-6">Simuladores de apalancamiento para obtener liquidez sin frenar el interés compuesto de tu cartera.</p>
+                <a href="#" class="flex items-center justify-between p-3 bg-slate-900/60 rounded-lg border border-slate-800 text-sm"><span class="text-slate-300">Calculadora de Pignoración</span><span class="text-xs text-amber-400 font-mono">Simulador</span></a>
+            </div>
+
+            <!-- Presupuesto -->
+            <div class="bg-slate-800/30 border border-slate-800/80 rounded-xl p-6">
+                <div class="flex items-center space-x-3 mb-4"><div class="p-2 bg-purple-500/10 text-purple-400 rounded-lg">📊</div><h4 class="text-lg font-bold text-white">Presupuesto Familiar</h4></div>
+                <p class="text-sm text-slate-400 mb-6">Plantillas para el control exhaustivo de gastos, ingresos y cálculo del fondo de emergencia.</p>
+                <a href="#" class="flex items-center justify-between p-3 bg-slate-900/60 rounded-lg border border-slate-800 text-sm"><span class="text-slate-300">Control de Gastos Mensual</span><span class="text-xs text-purple-400 font-mono">.xlsx</span></a>
+            </div>
+        </div>
     </main>
 </body>
 </html>
