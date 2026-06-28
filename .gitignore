@@ -1,0 +1,22 @@
+# Dependencias de Node.js
+node_modules/
+
+# Carpeta de salida de Eleventy (se genera automáticamente al hacer build)
+_site/
+
+# Archivos de sistema y logs
+.DS_Store
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.lock
+
+# Carpetas ocultas de configuración o editores
+.vscode/
+.idea/
+.cache/
+.eleventy/
+
+# Carpetas de despliegue local si las usas
+.vercel/
