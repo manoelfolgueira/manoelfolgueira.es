@@ -5,145 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manoel Folgueira | Optimización Financiera</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="min-h-screen flex flex-col justify-between font-sans antialiased selection:bg-emerald-500 selection:text-slate-900">
+<body class="min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-slate-900">
 
     <!-- Header -->
     <header class="border-b border-slate-800 bg-slate-900/70 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <span class="font-mono text-xl font-bold tracking-tight text-emerald-400">manoel<span class="text-slate-400">folgueira</span><span class="text-emerald-500">.es</span></span>
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="relative w-10 h-10 shrink-0">
+                    <div class="absolute -inset-0.5 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 opacity-90 z-10"></div>
+                    <img src="resources/img/perfil.jpg" alt="Manoel Folgueira" class="relative rounded-full object-cover w-full h-full border-2 border-slate-900 z-20">
+                </div>
+                <span class="font-mono text-lg font-bold tracking-tight text-emerald-400 hidden sm:block">
+                    manoel<span class="text-slate-400">folgueira</span><span class="text-emerald-500">.es</span>
+                </span>
             </div>
-            <nav class="flex space-x-4 text-xs font-medium text-slate-400">
-                <span class="px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hidden md:inline-block">Optimización Financiera</span>
+            <nav class="flex items-center gap-6 text-sm font-medium text-slate-400">
+                <a href="/" class="hover:text-emerald-400 transition-colors">Dashboard</a>
+                <a href="/bio" class="hover:text-emerald-400 transition-colors">Biografía</a>
+                <a href="https://www.linkedin.com/in/tu-perfil" target="_blank" class="hover:text-emerald-400 transition-colors">LinkedIn</a>
             </nav>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-grow">
-        
-        <!-- Hero Section (Compacta: Foto Izquierda, Texto Derecha) -->
-        <section class="mb-10 border-b border-slate-800/60 pb-8 flex flex-col sm:flex-row items-center sm:items-center gap-6 md:gap-8">
-            
-            <!-- Contenedor de la Imagen (Izquierda) -->
-            <div class="relative w-24 h-24 md:w-28 md:h-28 shrink-0 group">
-                <div class="absolute -inset-1 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 opacity-30 blur-md transition-opacity duration-300 group-hover:opacity-60 z-0"></div>
-                <div class="absolute -inset-0.5 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 opacity-90 z-10"></div>
-                <img src="resources/img/perfil.jpg" alt="Manoel Folgueira" class="relative rounded-full object-cover w-full h-full border-4 border-slate-900 z-20 transition-transform duration-300 group-hover:scale-105">
-            </div>
-
-            <!-- Columna de Texto (Derecha) -->
-            <div class="flex-1 text-center sm:text-left">
-                <h2 class="text-2xl font-extrabold text-white tracking-tight mb-2 md:text-3xl">
-                    Llevando tu economía a su estado óptimo.
-                </h2>
-                <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-3">
-                    Graduado en Ingeniería Informática. Comparto las herramientas, plantillas y simuladores que desarrollo para maximizar el patrimonio, controlar el presupuesto y planificar la independencia financiera.
-                </p>
-                <!-- Enlace a la Biografía -->
-                <a href="biografia.html" class="inline-flex items-center text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors group/link">
-                    Conocer mi perfil completo
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform group-hover/link:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </a>
-            </div>
-            
+    <main class="max-w-4xl w-full mx-auto px-4 py-12">
+        <section class="mb-12">
+            <h1 class="text-3xl font-extrabold text-white mb-3">Llevando tu economía a su estado óptimo.</h1>
+            <p class="text-slate-400 max-w-2xl">Graduado en Ingeniería Informática. Comparto herramientas, plantillas y simuladores que desarrollo para maximizar el patrimonio, controlar el presupuesto y planificar la independencia financiera.</p>
         </section>
 
-        <!-- Grid de Recursos -->
-        <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-6">Recursos Disponibles</h3>
-        <div class="grid gap-6 md:grid-cols-2">
-            
-            <!-- Bloque 1: Estrategia FIRE -->
-            <div class="bg-slate-800/30 border border-slate-800/80 rounded-xl p-6 hover:border-slate-700 hover:bg-slate-800/50 transition duration-200 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        </div>
-                        <h4 class="text-lg font-bold text-white">Estrategia FIRE</h4>
-                    </div>
-                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">Modelos de interés compuesto y proyecciones de gasto deflactado para planificar el retiro anticipado.</p>
-                </div>
-                <div class="space-y-2.5">
-                    <a href="#" target="_blank" class="flex items-center justify-between p-3 bg-slate-900/60 hover:bg-slate-900 rounded-lg border border-slate-800/80 hover:border-emerald-500/30 text-sm group transition">
-                        <span class="text-slate-300 group-hover:text-white font-medium">Calculadora de Retiro</span>
-                        <span class="text-xs text-emerald-400 font-mono bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-900/50">.xlsx</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Bloque 2: Indexación Pasiva -->
-            <div class="bg-slate-800/30 border border-slate-800/80 rounded-xl p-6 hover:border-slate-700 hover:bg-slate-800/50 transition duration-200 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="p-2 bg-blue-500/10 text-blue-400 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21h8a2 2 0 002-2v-2H6v2a2 2 0 002 2zM4 17h16V7H4v10zM4 7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" /></svg>
-                        </div>
-                        <h4 class="text-lg font-bold text-white">Fondos Indexados</h4>
-                    </div>
-                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">Plantillas de rebalanceo y asignación recurrente para fondos globales (MSCI World y S&P 500).</p>
-                </div>
-                <div class="space-y-2.5">
-                    <a href="#" target="_blank" class="flex items-center justify-between p-3 bg-slate-900/60 hover:bg-slate-900 rounded-lg border border-slate-800/80 hover:border-blue-500/30 text-sm group transition">
-                        <span class="text-slate-300 group-hover:text-white font-medium">Modelo de Aportación</span>
-                        <span class="text-xs text-blue-400 font-mono bg-blue-950/40 px-2 py-0.5 rounded border border-blue-900/50">Sheets</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Bloque 3: Financiación Avanzada -->
-            <div class="bg-slate-800/30 border border-slate-800/80 rounded-xl p-6 hover:border-slate-700 hover:bg-slate-800/50 transition duration-200 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="p-2 bg-amber-500/10 text-amber-400 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
-                        </div>
-                        <h4 class="text-lg font-bold text-white">Pignoración & Crédito</h4>
-                    </div>
-                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">Simuladores de apalancamiento para obtener liquidez sin frenar el interés compuesto de tu cartera.</p>
-                </div>
-                <div class="space-y-2.5">
-                    <a href="#" target="_blank" class="flex items-center justify-between p-3 bg-slate-900/60 hover:bg-slate-900 rounded-lg border border-slate-800/80 hover:border-amber-500/30 text-sm group transition">
-                        <span class="text-slate-300 group-hover:text-white font-medium">Calculadora de Pignoración</span>
-                        <span class="text-xs text-amber-400 font-mono bg-amber-950/40 px-2 py-0.5 rounded border border-amber-900/50">Simulador</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Bloque 4: Control Familiar -->
-            <div class="bg-slate-800/30 border border-slate-800/80 rounded-xl p-6 hover:border-slate-700 hover:bg-slate-800/50 transition duration-200 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="p-2 bg-purple-500/10 text-purple-400 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                        </div>
-                        <h4 class="text-lg font-bold text-white">Presupuesto Familiar</h4>
-                    </div>
-                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">Plantillas para el control exhaustivo de gastos, ingresos y cálculo del fondo de emergencia.</p>
-                </div>
-                <div class="space-y-2.5">
-                    <a href="#" target="_blank" class="flex items-center justify-between p-3 bg-slate-900/60 hover:bg-slate-900 rounded-lg border border-slate-800/80 hover:border-purple-500/30 text-sm group transition">
-                        <span class="text-slate-300 group-hover:text-white font-medium">Control de Gastos Mensual</span>
-                        <span class="text-xs text-purple-400 font-mono bg-purple-950/40 px-2 py-0.5 rounded border border-purple-900/50">.xlsx</span>
-                    </a>
-                </div>
-            </div>
-
-        </div>
+        <!-- Aquí irían tus bloques de recursos tal como los tenías -->
     </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-800/60 bg-slate-950/20 py-8 text-center text-xs text-slate-500">
-        <div class="max-w-4xl mx-auto px-4 space-y-2">
-            <p>© 2026 manoelfolgueira.es</p>
-            <p class="text-slate-600 max-w-xl mx-auto">La información expuesta no constituye asesoramiento financiero regulado. Los simuladores reflejan proyecciones matemáticas estimadas basadas en datos históricos.</p>
-        </div>
-    </footer>
-
 </body>
 </html>
