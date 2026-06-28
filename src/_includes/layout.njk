@@ -12,20 +12,24 @@
       <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
           
           <div class="flex items-center gap-4">
-              <!-- Contenedor con efecto Glow -->
               <div class="relative w-10 h-10 group">
                   <div class="absolute -inset-0.5 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 opacity-50 blur-sm group-hover:opacity-80 transition-opacity"></div>
                   <img src="/res/img/perfil.jpg" class="relative w-full h-full rounded-full object-cover border-2 border-slate-900 z-10">
               </div>
-              
               <a href="/" class="font-mono text-xl font-bold tracking-tight text-white">
                   manoel<span class="text-emerald-500">folgueira.es</span>
               </a>
           </div>
 
-          <nav class="flex gap-8 text-sm font-medium text-slate-400">
-              <a href="/" class="hover:text-white transition">Dashboard</a>
-              <a href="/bio" class="hover:text-white transition">Biografía</a>
+          <nav class="flex gap-4 text-sm font-medium text-slate-400">
+              <a href="/" class="relative px-4 py-2 hover:text-white transition group">
+                  <span class="absolute inset-0 rounded-lg bg-gradient-to-tr from-blue-500/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></span>
+                  <span class="relative">Panel</span>
+              </a>
+              <a href="/bio" class="relative px-4 py-2 hover:text-white transition group">
+                  <span class="absolute inset-0 rounded-lg bg-gradient-to-tr from-blue-500/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></span>
+                  <span class="relative">Biografía</span>
+              </a>
           </nav>
       </div>
     </header>
