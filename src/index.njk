@@ -3,25 +3,50 @@ layout: layout.njk
 title: Dashboard
 ---
 
-<div class="space-y-12 py-6">
-    <a href="/guia" class="block p-10 rounded-3xl bg-slate-900 border border-slate-800 hover:border-emerald-500/30 transition shadow-2xl">
-        <h2 class="text-3xl font-bold text-white mb-2">Guía Desde Cero</h2>
-        <p class="text-slate-400 text-lg">El mapa completo para optimizar tus finanzas desde la base.</p>
-    </a>
-
-    <div class="grid gap-8 md:grid-cols-2">
-        {% set tools = [
-            { title: "Calculadora FIRE", desc: "Planifica tu retiro.", icon: "🛡️" },
-            { title: "Fondos Indexados", desc: "Gestión de carteras.", icon: "📈" }
-        ] %}
-        
-        {% for item in tools %}
-        <div class="group p-8 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition">
-            <div class="text-3xl mb-4">{{ item.icon }}</div>
-            <h4 class="text-xl font-bold text-white mb-2">{{ item.title }}</h4>
-            <p class="text-slate-400 mb-6">{{ item.desc }}</p>
-            <span class="text-emerald-400 font-mono text-sm">→ Abrir recurso</span>
+<section class="mb-12">
+    <a href="/guia" class="group block p-8 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 hover:border-emerald-500/50 transition-all shadow-xl">
+        <div class="flex items-center gap-6">
+            <div class="p-4 bg-emerald-500/10 text-emerald-400 rounded-xl group-hover:scale-110 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-white group-hover:text-emerald-400">Guía: Optimización Financiera desde Cero</h2>
+                <p class="text-slate-400 mt-1">El camino estructurado para pasar del caos a la independencia financiera. Ideal si estás empezando.</p>
+            </div>
         </div>
-        {% endfor %}
+    </a>
+</section>
+
+<h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Herramientas de Cálculo</h3>
+<div class="grid gap-6 md:grid-cols-2 mb-12">
+    {% set tools = [
+        { title: "Calculadora FIRE", desc: "Proyecciones de retiro anticipado.", icon: "🛡️", color: "emerald", label: ".xlsx" },
+        { title: "Calculadora Pignoración", desc: "Simulador de liquidez sobre cartera.", icon: "🏦", color: "amber", label: "App" }
+    ] %}
+    {% for item in tools %}
+    <div class="bg-slate-800/20 border border-slate-800 rounded-xl p-6 hover:bg-slate-800/40 transition">
+        <div class="flex items-center gap-3 mb-4"><span class="text-2xl">{{ item.icon }}</span><h4 class="font-bold text-white">{{ item.title }}</h4></div>
+        <p class="text-sm text-slate-400 mb-6">{{ item.desc }}</p>
+        <a href="#" class="flex items-center justify-between p-3 bg-slate-900 rounded-lg border border-slate-800 text-sm hover:border-{{ item.color }}-500/30">
+            <span class="text-slate-300">Abrir herramienta</span><span class="text-xs text-{{ item.color }}-400 font-mono">{{ item.label }}</span>
+        </a>
     </div>
+    {% endfor %}
+</div>
+
+<h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Recursos y Plantillas</h3>
+<div class="grid gap-6 md:grid-cols-2">
+    {% set resources = [
+        { title: "Fondos Indexados", desc: "Gestión de MSCI World y S&P 500.", icon: "📈", color: "blue", label: "Sheets" },
+        { title: "Presupuesto Mensual", desc: "Control exhaustivo de ingresos/gastos.", icon: "📊", color: "purple", label: ".xlsx" }
+    ] %}
+    {% for item in resources %}
+    <div class="bg-slate-800/20 border border-slate-800 rounded-xl p-6 hover:bg-slate-800/40 transition">
+        <div class="flex items-center gap-3 mb-4"><span class="text-2xl">{{ item.icon }}</span><h4 class="font-bold text-white">{{ item.title }}</h4></div>
+        <p class="text-sm text-slate-400 mb-6">{{ item.desc }}</p>
+        <a href="#" class="flex items-center justify-between p-3 bg-slate-900 rounded-lg border border-slate-800 text-sm hover:border-{{ item.color }}-500/30">
+            <span class="text-slate-300">Descargar recurso</span><span class="text-xs text-{{ item.color }}-400 font-mono">{{ item.label }}</span>
+        </a>
+    </div>
+    {% endfor %}
 </div>
