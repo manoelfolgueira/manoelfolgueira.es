@@ -3,19 +3,27 @@ layout: layout.njk
 title: Panel
 ---
 
-<div class="space-y-16 py-6" style="scroll-behavior: smooth;">
+<div class="space-y-10 py-6" style="scroll-behavior: smooth;">
     
-    <div class="relative">
-        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <svg class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+    <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl">
+        <h1 class="text-3xl font-bold text-white mb-2">Centro de Control</h1>
+        <p class="text-slate-400 mb-8">Utiliza el buscador para localizar rápidamente cualquier recurso, artículo o herramienta de gestión.</p>
+
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="text" id="buscador" placeholder="Buscar artículos y aplicaciones..." 
+                   class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 text-white rounded-2xl pl-12 pr-4 py-5 shadow-inner focus:outline-none transition placeholder-slate-600 text-lg">
         </div>
-        <input type="text" id="buscador" placeholder="Buscar Artículos y Aplicaciones" class="w-full bg-slate-900/80 border border-slate-800 focus:border-emerald-500 text-white rounded-xl pl-12 pr-4 py-4 shadow-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 transition placeholder-slate-500 text-lg">
     </div>
 
-    <section id="articulos" class="scroll-mt-24 search-section">
-        <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-2 section-title">Artículos</h3>
+    <section id="articulos" class="search-section">
+        <h3 class="text-lg font-semibold text-slate-300 mb-6 flex items-center gap-2">
+            <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span> Artículos
+        </h3>
         
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div class="searchable-item p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex flex-col justify-between hover:border-slate-700 transition"
