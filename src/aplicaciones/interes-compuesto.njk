@@ -270,7 +270,7 @@ permalink: /aplicaciones/interes-compuesto/
 
   function loadConfig() {
     try {
-      const confStr = localStorage.getItem('mf_apps_config');
+      const confStr = localStorage.getItem('mf_aplicaciones_config');
       if (confStr) {
         const conf = JSON.parse(confStr);
         if (conf && conf.interes_compuesto) {
@@ -286,12 +286,12 @@ permalink: /aplicaciones/interes-compuesto/
 
   function saveConfig() {
     try {
-      let conf = JSON.parse(localStorage.getItem('mf_apps_config') || '{}');
+      let conf = JSON.parse(localStorage.getItem('mf_aplicaciones_config') || '{}');
       conf.interes_compuesto = {};
       inputIds.forEach(id => {
         conf.interes_compuesto[id] = document.getElementById(id).value;
       });
-      localStorage.setItem('mf_apps_config', JSON.stringify(conf));
+      localStorage.setItem('mf_aplicaciones_config', JSON.stringify(conf));
     } catch (e) { console.error(e); }
   }
 
