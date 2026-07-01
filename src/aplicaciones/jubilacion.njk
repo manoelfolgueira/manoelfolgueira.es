@@ -378,7 +378,7 @@ permalink: /aplicaciones/jubilacion/
   // Carga la configuración guardada si existe
   function loadConfig() {
     try {
-      const confStr = localStorage.getItem('mf_apps_config');
+      const confStr = localStorage.getItem('mf_aplicaciones_config');
       if (confStr) {
         const conf = JSON.parse(confStr);
         if (conf && conf.jubilacion) {
@@ -396,7 +396,7 @@ permalink: /aplicaciones/jubilacion/
   function saveConfig() {
     try {
       let conf = {};
-      const confStr = localStorage.getItem('mf_apps_config');
+      const confStr = localStorage.getItem('mf_aplicaciones_config');
       if (confStr) conf = JSON.parse(confStr);
 
       conf.jubilacion = {};
@@ -404,7 +404,7 @@ permalink: /aplicaciones/jubilacion/
         conf.jubilacion[id] = document.getElementById(id).value;
       });
 
-      localStorage.setItem('mf_apps_config', JSON.stringify(conf));
+      localStorage.setItem('mf_aplicaciones_config', JSON.stringify(conf));
     } catch (e) { console.error("Error guardando configuración", e); }
   }
 
