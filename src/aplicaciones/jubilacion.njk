@@ -7,15 +7,14 @@ permalink: /aplicaciones/jubilacion/
 <!-- Cargamos Chart.js solo para esta herramienta -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Estilos integrados (se omite el body para heredar el diseño general de tu web) -->
 <style>
   .calc-card {
-    background: #020617;
+    background: #0f172a; /* Igualado al bg-slate-900 del index */
     border-radius: 1rem;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
-    border: 1px solid #1f2937;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid #1e293b; /* border-slate-800 */
   }
   .calc-card h1, .calc-card h2 {
     margin-top: 0;
@@ -37,8 +36,8 @@ permalink: /aplicaciones/jubilacion/
   .calc-card input[type="number"] {
     padding: 0.4rem 0.5rem;
     border-radius: 0.375rem;
-    border: 1px solid #4b5563;
-    background: #0f172a;
+    border: 1px solid #334155;
+    background: #020617; /* Fondo más oscuro solo para inputs */
     color: #e5e7eb;
     box-sizing: border-box;
   }
@@ -46,8 +45,8 @@ permalink: /aplicaciones/jubilacion/
     width: 100%;
     padding: 0.4rem 0.5rem;
     border-radius: 0.375rem;
-    border: 1px solid #4b5563;
-    background: #0f172a;
+    border: 1px solid #334155;
+    background: #020617;
     color: #e5e7eb;
   }
   .range-wrapper {
@@ -62,7 +61,7 @@ permalink: /aplicaciones/jubilacion/
     color: #9ca3af;
   }
   .calc-card input[type="range"] {
-    accent-color: #10b981; /* emerald-500 */
+    accent-color: #10b981;
   }
   .badge {
     display: inline-flex;
@@ -94,7 +93,7 @@ permalink: /aplicaciones/jubilacion/
     }
   }
   .result-box {
-    background: radial-gradient(circle at top left, #1e293b, #020617);
+    background: radial-gradient(circle at top left, #1e293b, #0f172a);
     border-radius: 0.9rem;
     padding: 1rem;
     border: 1px solid #334155;
@@ -164,7 +163,7 @@ permalink: /aplicaciones/jubilacion/
     text-align: left;
   }
   .br-table thead {
-    background: #020617;
+    background: #0f172a;
     color: #94a3b8;
   }
   .br-table tbody tr:nth-child(odd) {
@@ -336,7 +335,13 @@ permalink: /aplicaciones/jubilacion/
 </div>
 
 <script>
-  // Elementos del DOM
+  // Array con todos los IDs de los inputs para facilitar el guardado
+  const inputIds = [
+    'edadActual', 'edadJubilacion', 'salarioActual', 'crecimientoSalarial', 
+    'inflacion', 'crecimientoPensionMax', 'tasaSustitucion', 'pensionMaxHoy', 
+    'aniosCotizados', 'forzarTope'
+  ];
+
   const edadActualEl = document.getElementById('edadActual');
   const edadJubilacionEl = document.getElementById('edadJubilacion');
   const salarioActualEl = document.getElementById('salarioActual');
@@ -368,22 +373,47 @@ permalink: /aplicaciones/jubilacion/
   let salaryChart = null;
   let pensionChart = null;
   let brChart = null;
-
-  // Datos para BR (últimos 30 años)
   let brData = null;
 
+  // Carga la configuración guardada si existe
+  function loadConfig() {
+    try {
+      const confStr = localStorage.getItem('mf_aplicaciones_config');
+      if (confStr) {
+        const conf = JSON.parse(confStr);
+        if (conf && conf.jubilacion) {
+          inputIds.forEach(id => {
+            if (conf.jubilacion[id] !== undefined) {
+              document.getElementById(id).value = conf.jubilacion[id];
+            }
+          });
+        }
+      }
+    } catch (e) { console.error("Error cargando configuración", e); }
+  }
+
+  // Guarda la configuración actual en localStorage
+  function saveConfig() {
+    try {
+      let conf = {};
+      const confStr = localStorage.getItem('mf_aplicaciones_config');
+      if (confStr) conf = JSON.parse(confStr);
+
+      conf.jubilacion = {};
+      inputIds.forEach(id => {
+        conf.jubilacion[id] = document.getElementById(id).value;
+      });
+
+      localStorage.setItem('mf_aplicaciones_config', JSON.stringify(conf));
+    } catch (e) { console.error("Error guardando configuración", e); }
+  }
+
   function formatoEuro(valor) {
-    return valor.toLocaleString('es-ES', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2
-    }) + ' €';
+    return valor.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' €';
   }
 
   function formatoPorcentaje(valor) {
-    return (valor * 100).toLocaleString('es-ES', {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1
-    }) + ' %';
+    return (valor * 100).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' %';
   }
 
   function actualizarLabels() {
@@ -418,37 +448,23 @@ permalink: /aplicaciones/jubilacion/
       pensionRealHoyEl.textContent = '–';
       actualizarGraficas([], [], [], [], []);
       brData = null;
-      if (brChart) {
-        brChart.destroy();
-        brChart = null;
-      }
+      if (brChart) { brChart.destroy(); brChart = null; }
       brSummaryEl.textContent = 'Pulsa el botón para ver la tabla de salarios históricos y la Base Reguladora.';
       brTableContainer.innerHTML = '';
+      saveConfig(); // Guardamos también en estados vacíos
       return;
     }
 
-    // Cálculo del último sueldo nominal
     const factorSalario = Math.pow(1 + gSal, aniosHastaJubilacion);
     const ultimoSueldoNominal = salarioActual * factorSalario;
-
-    // Deflactor por inflación
     const factorInflacion = Math.pow(1 + infl, aniosHastaJubilacion);
     const ultimoSueldoReal = ultimoSueldoNominal / factorInflacion;
-
-    // Pensión máxima futura (nominal)
     const factorPMax = Math.pow(1 + gPMax, aniosHastaJubilacion);
     const pensionMaxFutura = pensionMaxHoy * factorPMax;
-
-    // Pensión teórica por % de sustitución (nominal)
     const pensionSinTope = ultimoSueldoNominal * tasaSust;
-    const pensionTeoricaNominal = forzarTope
-      ? Math.min(pensionSinTope, pensionMaxFutura)
-      : pensionSinTope;
-
-    // Pensión real en euros de hoy (deflactada)
+    const pensionTeoricaNominal = forzarTope ? Math.min(pensionSinTope, pensionMaxFutura) : pensionSinTope;
     const pensionRealHoy = pensionTeoricaNominal / factorInflacion;
 
-    // Pintar resultados
     ultimoSueldoNominalEl.textContent = formatoEuro(ultimoSueldoNominal);
     ultimoSueldoRealEl.textContent = formatoEuro(ultimoSueldoReal);
     pensionTeoricaNominalEl.textContent = formatoEuro(pensionTeoricaNominal);
@@ -456,7 +472,6 @@ permalink: /aplicaciones/jubilacion/
     pensionMaxFuturaEl.textContent = formatoEuro(pensionMaxFutura);
     pensionRealHoyEl.textContent = formatoEuro(pensionRealHoy);
 
-    // Datos año a año para gráficas generales
     const labels = [];
     const salarioNominalSerie = [];
     const salarioRealSerie = [];
@@ -464,39 +479,30 @@ permalink: /aplicaciones/jubilacion/
     const pensionMaxSerie = [];
 
     for (let i = 0; i <= aniosHastaJubilacion; i++) {
-      const yearLabel = 'Año ' + i;
-      labels.push(yearLabel);
-
+      labels.push('Año ' + i);
       const sNom = salarioActual * Math.pow(1 + gSal, i);
       const fInfl = Math.pow(1 + infl, i);
       const sReal = sNom / fInfl;
-
       salarioNominalSerie.push(sNom);
       salarioRealSerie.push(sReal);
-
       const pMax = pensionMaxHoy * Math.pow(1 + gPMax, i);
       const pSinTope = sNom * tasaSust;
       const pNom = forzarTope ? Math.min(pSinTope, pMax) : pSinTope;
-
       pensionTeoricaSerie.push(pNom);
       pensionMaxSerie.push(pMax);
     }
 
     actualizarGraficas(labels, salarioNominalSerie, salarioRealSerie, pensionTeoricaSerie, pensionMaxSerie);
 
-    // --- Datos para Base Reguladora: últimos 30 años antes de la jubilación ---
     const totalPuntos = salarioNominalSerie.length;
     const nBR = Math.min(30, totalPuntos);
     const inicio = totalPuntos - nBR;
-
     const brLabels = [];
     const brSalaries = [];
+    
     for (let i = inicio; i < totalPuntos; i++) {
       const distanciaJub = (totalPuntos - 1) - i;
-      const etiqueta = distanciaJub === 0
-        ? 'J'
-        : 'J-' + distanciaJub;
-      brLabels.push(etiqueta);
+      brLabels.push(distanciaJub === 0 ? 'J' : 'J-' + distanciaJub);
       brSalaries.push(salarioNominalSerie[i]);
     }
 
@@ -504,12 +510,9 @@ permalink: /aplicaciones/jubilacion/
     brSalaries.forEach(v => suma += v);
     const baseReguladora = nBR > 0 ? (suma / nBR) : 0;
 
-    brData = {
-      labels: brLabels,
-      salaries: brSalaries,
-      baseReguladora,
-      ultimoSueldo: ultimoSueldoNominal
-    };
+    brData = { labels: brLabels, salaries: brSalaries, baseReguladora, ultimoSueldo: ultimoSueldoNominal };
+    
+    saveConfig(); // Guardar cambios tras cada recálculo
   }
 
   function actualizarGraficas(labels, salarioNominalSerie, salarioRealSerie, pensionTeoricaSerie, pensionMaxSerie) {
@@ -521,7 +524,6 @@ permalink: /aplicaciones/jubilacion/
 
     if (salaryChart) salaryChart.destroy();
     if (pensionChart) pensionChart.destroy();
-
     if (!labels.length) return;
 
     salaryChart = new Chart(salaryCtx, {
@@ -529,35 +531,11 @@ permalink: /aplicaciones/jubilacion/
       data: {
         labels: labels,
         datasets: [
-          {
-            label: 'Salario nominal',
-            data: salarioNominalSerie,
-            borderColor: '#3b82f6',
-            backgroundColor: '#3b82f6',
-            borderWidth: 2,
-            tension: 0.2
-          },
-          {
-            label: 'Salario deflactado (euros de hoy)',
-            data: salarioRealSerie,
-            borderColor: '#10b981',
-            backgroundColor: '#10b981',
-            borderWidth: 2,
-            borderDash: [4, 4],
-            tension: 0.2
-          }
+          { label: 'Salario nominal', data: salarioNominalSerie, borderColor: '#3b82f6', backgroundColor: '#3b82f6', borderWidth: 2, tension: 0.2 },
+          { label: 'Salario deflactado (euros de hoy)', data: salarioRealSerie, borderColor: '#10b981', backgroundColor: '#10b981', borderWidth: 2, borderDash: [4, 4], tension: 0.2 }
         ]
       },
-      options: {
-        responsive: true,
-        interaction: { mode: 'index', intersect: false },
-        scales: {
-          y: {
-            beginAtZero: false,
-            ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' }
-          }
-        }
-      }
+      options: { responsive: true, interaction: { mode: 'index', intersect: false }, scales: { y: { beginAtZero: false, ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' } } } }
     });
 
     pensionChart = new Chart(pensionCtx, {
@@ -565,35 +543,11 @@ permalink: /aplicaciones/jubilacion/
       data: {
         labels: labels,
         datasets: [
-          {
-            label: 'Pensión teórica (nominal)',
-            data: pensionTeoricaSerie,
-            borderColor: '#8b5cf6',
-            backgroundColor: '#8b5cf6',
-            borderWidth: 2,
-            tension: 0.2
-          },
-          {
-            label: 'Pensión máxima futura',
-            data: pensionMaxSerie,
-            borderColor: '#f59e0b',
-            backgroundColor: '#f59e0b',
-            borderWidth: 2,
-            borderDash: [4, 4],
-            tension: 0.2
-          }
+          { label: 'Pensión teórica (nominal)', data: pensionTeoricaSerie, borderColor: '#8b5cf6', backgroundColor: '#8b5cf6', borderWidth: 2, tension: 0.2 },
+          { label: 'Pensión máxima futura', data: pensionMaxSerie, borderColor: '#f59e0b', backgroundColor: '#f59e0b', borderWidth: 2, borderDash: [4, 4], tension: 0.2 }
         ]
       },
-      options: {
-        responsive: true,
-        interaction: { mode: 'index', intersect: false },
-        scales: {
-          y: {
-            beginAtZero: false,
-            ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' }
-          }
-        }
-      }
+      options: { responsive: true, interaction: { mode: 'index', intersect: false }, scales: { y: { beginAtZero: false, ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' } } } }
     });
   }
 
@@ -601,25 +555,16 @@ permalink: /aplicaciones/jubilacion/
     if (!brData) {
       brSummaryEl.textContent = 'Primero ajusta los parámetros para que haya años hasta la jubilación y vuelve a pulsar.';
       brTableContainer.innerHTML = '';
-      if (brChart) {
-        brChart.destroy();
-        brChart = null;
-      }
+      if (brChart) { brChart.destroy(); brChart = null; }
       return;
     }
 
     const { labels, salaries, baseReguladora, ultimoSueldo } = brData;
     const ratio = baseReguladora / ultimoSueldo;
 
-    brSummaryEl.innerHTML =
-      'Base Reguladora media (simplificada) de los últimos ' + labels.length +
-      ' años: <span>' + formatoEuro(baseReguladora) +
-      '</span>. Esto equivale al <span>' + formatoPorcentaje(ratio) +
-      '</span> de tu último sueldo estimado (' + formatoEuro(ultimoSueldo) + ').';
+    brSummaryEl.innerHTML = 'Base Reguladora media (simplificada) de los últimos ' + labels.length + ' años: <span>' + formatoEuro(baseReguladora) + '</span>. Esto equivale al <span>' + formatoPorcentaje(ratio) + '</span> de tu último sueldo estimado (' + formatoEuro(ultimoSueldo) + ').';
 
-    let html = '<div class="overflow-x-auto"><table class="br-table"><thead><tr>' +
-      '<th>Año relativo</th><th>Salario mensual estimado</th>' +
-      '</tr></thead><tbody>';
+    let html = '<div class="overflow-x-auto"><table class="br-table"><thead><tr><th>Año relativo</th><th>Salario mensual estimado</th></tr></thead><tbody>';
     for (let i = 0; i < labels.length; i++) {
       html += '<tr><td>' + labels[i] + '</td><td>' + formatoEuro(salaries[i]) + '</td></tr>';
     }
@@ -637,46 +582,21 @@ permalink: /aplicaciones/jubilacion/
       data: {
         labels: labels,
         datasets: [
-          {
-            label: 'Línea último sueldo (constante)',
-            data: serieUltimo,
-            borderColor: '#3b82f6',
-            borderWidth: 2,
-            tension: 0,
-          },
-          {
-            label: 'Línea Base Reguladora media',
-            data: serieBR,
-            borderColor: '#ef4444',
-            borderWidth: 2,
-            borderDash: [4, 4],
-            tension: 0,
-          }
+          { label: 'Línea último sueldo (constante)', data: serieUltimo, borderColor: '#3b82f6', borderWidth: 2, tension: 0 },
+          { label: 'Línea Base Reguladora media', data: serieBR, borderColor: '#ef4444', borderWidth: 2, borderDash: [4, 4], tension: 0 }
         ]
       },
-      options: {
-        responsive: true,
-        interaction: { mode: 'index', intersect: false },
-        scales: {
-          y: {
-            beginAtZero: false,
-            ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' }
-          }
-        }
-      }
+      options: { responsive: true, interaction: { mode: 'index', intersect: false }, scales: { y: { beginAtZero: false, ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' } } } }
     });
   }
 
-  [
-    edadActualEl, edadJubilacionEl, salarioActualEl,
-    crecimientoSalarialEl, inflacionEl, crecimientoPensionMaxEl,
-    tasaSustitucionEl, pensionMaxHoyEl, aniosCotizadosEl, forzarTopeEl
-  ].forEach(el => {
-    el.addEventListener('input', recalcular);
+  inputIds.forEach(id => {
+    document.getElementById(id).addEventListener('input', recalcular);
   });
 
   calcBrBtn.addEventListener('click', renderBrTableAndChart);
 
-  // Inicialización
+  // Inicialización: Cargar config y luego calcular
+  loadConfig();
   recalcular();
 </script>
