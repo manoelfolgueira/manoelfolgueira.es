@@ -1,40 +1,31 @@
 # manoelfolgueira.es - Systematic Personal Finance
 
-Central repository and source code for the website dedicated to efficient personal economy management, investment simulation, and technological infrastructure.
+Source code and centralized dashboard for my personal web space dedicated to efficient wealth management, investment simulation, and financial independence planning.
 
-## 🚀 Project Description
+## 🚀 Overview
 
-This web space merges software engineering with structured personal finance. It is designed as a static, lightweight dashboard to centralize and share analytical resources, mathematical simulators, and financial planning templates with the audience.
+This repository houses a lightweight, static web application that merges software engineering principles with structured personal finance. It serves as a central hub for analytical resources, high-fidelity mathematical simulators, and technical documentation.
 
-## 🛠️ Architecture and Deployment
+## 🛠️ Architecture & Tech Stack
 
-The site's infrastructure has been designed under the philosophy of maximum optimization, loading speed, and zero cost:
+The infrastructure is designed for maximum optimization, modularity, and zero hosting costs. The site is built using a modern static generation approach:
 
-- **Frontend:** Plain HTML5 semantically structured.
-- **Styles:** Tailwind CSS integrated via dynamic CDN.
-- **Version Control:** GitHub repository.
-- **Deployment and CI/CD:** Automated on **Vercel** with continuous integration.
-- **Custom Domain:** Connected directly to `manoelfolgueira.es` with automatically managed SSL/HTTPS certificates.
+- **SSG (Static Site Generator):** [Eleventy (11ty)](https://11ty.dev/) for fast, pre-rendered builds.
+- **Templating:** Nunjucks (`.njk`) for modular layouts and reusable components.
+- **Styling:** Tailwind CSS (via CDN) for utility-first, responsive design.
+- **Interactivity:** Vanilla JavaScript and [Chart.js](https://www.chartjs.org/) for data visualization.
+- **Deployment & CI/CD:** Automated via **Vercel** with a custom domain and managed SSL.
 
-## 📊 Modules and Resources (Roadmap)
+## ⚙️ Core Features & Capabilities
 
-The repository is prepared to expand and include technical documentation and tools in the following areas:
+Rather than relying on backend databases, the interactive applications in this project are built with a **local-first** and privacy-centric mindset:
 
-### 1. FIRE Strategy and Early Retirement
-- Long-term compound interest projection models.
-- Future expense simulators adjusted for inflation.
-- Financial coverage plans and contingencies for the transition to early retirement.
+- **Advanced Simulators:** Tools for FIRE planning, progressive taxation, and compound interest adjusted for inflation.
+- **Client-Side Persistence:** User configurations and simulation states are saved strictly in the browser using `localStorage`.
+- **Config Portability:** A custom JSON export/import system allows users to seamlessly back up and transfer their financial simulation states across different devices and browsers.
 
-### 2. Systematic Index Investing
-- Periodic asset allocation models.
-- Spreadsheets for the efficient rebalancing of global portfolios based on low-cost index funds.
-- Documentation on tax optimization in fund transfers.
+## 🔒 License
 
-### 3. Smart Financing and Leverage
-- Investment portfolio pledging (pignoration) calculators for major acquisitions.
-- Technical analysis of Lombard credit lines as an alternative to asset liquidation, protecting the snowball effect of compound interest.
+Copyright (c) 2026 Manoel Folgueira. All rights reserved.
 
-### 4. Infrastructure and Local Privacy (Self-Hosting)
-- Deployment guides for managing sensitive financial data in local environments.
-- Container configuration and secure network infrastructure.
-- Data backup automation.
+This source code, website design, and any portion thereof may not be reproduced, distributed, modified, or used in any manner whatsoever without the express written permission of the author.
