@@ -1,0 +1,682 @@
+---
+layout: layout.njk
+title: Simulador de Jubilación
+permalink: /apps/jubilacion/
+---
+
+<!-- Cargamos Chart.js solo para esta herramienta -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Estilos integrados (se omite el body para heredar el diseño general de tu web) -->
+<style>
+  .calc-card {
+    background: #020617;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+    border: 1px solid #1f2937;
+  }
+  .calc-card h1, .calc-card h2 {
+    margin-top: 0;
+    color: #f9fafb;
+    font-weight: 800;
+  }
+  .calc-card h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .calc-card h2 { font-size: 1.3rem; margin-bottom: 1rem; margin-top: 1.5rem; }
+  .calc-card label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    color: #cbd5f5;
+  }
+  .calc-card input[type="number"],
+  .calc-card input[type="range"] {
+    width: 100%;
+  }
+  .calc-card input[type="number"] {
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #4b5563;
+    background: #0f172a;
+    color: #e5e7eb;
+    box-sizing: border-box;
+  }
+  .calc-card select {
+    width: 100%;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #4b5563;
+    background: #0f172a;
+    color: #e5e7eb;
+  }
+  .range-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .range-wrapper span {
+    font-size: 0.85rem;
+    min-width: 3.5rem;
+    text-align: right;
+    color: #9ca3af;
+  }
+  .calc-card input[type="range"] {
+    accent-color: #10b981; /* emerald-500 */
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #6ee7b7;
+  }
+  .pill {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    background: rgba(148, 163, 184, 0.2);
+    color: #e5e7eb;
+    margin-left: 0.25rem;
+  }
+  .results-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  @media (min-width: 768px) {
+    .results-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .result-box {
+    background: radial-gradient(circle at top left, #1e293b, #020617);
+    border-radius: 0.9rem;
+    padding: 1rem;
+    border: 1px solid #334155;
+  }
+  .result-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+  .result-main {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    color: #f8fafc;
+  }
+  .result-sub {
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+  .highlight {
+    color: #10b981;
+  }
+  canvas {
+    background: #020617;
+    border-radius: 0.75rem;
+    border: 1px solid #1e293b;
+    padding: 0.5rem;
+  }
+  .btn-calc {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid #10b981;
+    background: #064e3b;
+    color: #6ee7b7;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+  }
+  .btn-calc:hover {
+    background: #022c22;
+  }
+  .br-summary {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+  }
+  .br-summary span {
+    font-weight: 700;
+    color: #f8fafc;
+  }
+  .br-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+  }
+  .br-table th, .br-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #1e293b;
+    text-align: right;
+  }
+  .br-table th:first-child, .br-table td:first-child {
+    text-align: left;
+  }
+  .br-table thead {
+    background: #020617;
+    color: #94a3b8;
+  }
+  .br-table tbody tr:nth-child(odd) {
+    background: rgba(30, 41, 59, 0.4);
+  }
+</style>
+
+<div class="w-full">
+  <header class="calc-card">
+    <h1>Simulador de Jubilación</h1>
+    <p class="text-slate-400 text-sm mb-3">
+      Ajusta los parámetros (subida salarial, inflación, pensión máxima, etc.) y el simulador calculará:
+      <strong class="text-slate-200">último sueldo</strong>, <strong class="text-slate-200">pensión futura</strong> y su equivalente en <strong class="text-slate-200">euros de hoy</strong>.
+    </p>
+    <span class="badge">Modelo simplificado • No es cálculo oficial de la Seguridad Social</span>
+  </header>
+
+  <section class="calc-card">
+    <h2>Parámetros básicos</h2>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div>
+        <label>Edad actual</label>
+        <input type="number" id="edadActual" value="33" min="18" max="70" />
+      </div>
+      <div>
+        <label>Edad de jubilación</label>
+        <input type="number" id="edadJubilacion" value="67" min="60" max="75" />
+      </div>
+      <div>
+        <label>Salario neto actual (€/mes)</label>
+        <input type="number" id="salarioActual" value="2159.47" step="0.01" min="0" />
+      </div>
+    </div>
+
+    <h2>Crecimientos anuales</h2>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label>Subida salarial anual (%)</label>
+        <div class="range-wrapper">
+          <input type="range" id="crecimientoSalarial" min="0" max="8" step="0.1" value="3" />
+          <span id="crecimientoSalarialLabel">3.0 %</span>
+        </div>
+      </div>
+      <div>
+        <label>Inflación anual (%)</label>
+        <div class="range-wrapper">
+          <input type="range" id="inflacion" min="0" max="5" step="0.1" value="2" />
+          <span id="inflacionLabel">2.0 %</span>
+        </div>
+      </div>
+      <div>
+        <label>Crec. anual pensión máxima (%) <span class="pill">aprox. base máxima</span></label>
+        <div class="range-wrapper">
+          <input type="range" id="crecimientoPensionMax" min="0" max="4" step="0.1" value="2.8" />
+          <span id="crecimientoPensionMaxLabel">2.8 %</span>
+        </div>
+      </div>
+      <div>
+        <label>% sustitución sobre último sueldo</label>
+        <div class="range-wrapper">
+          <input type="range" id="tasaSustitucion" min="40" max="90" step="1" value="70" />
+          <span id="tasaSustitucionLabel">70 %</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>Pensión máxima hoy y cotización</h2>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div>
+        <label>Pensión máxima neta HOY (€/mes)</label>
+        <input type="number" id="pensionMaxHoy" value="3175" step="1" min="0" />
+      </div>
+      <div>
+        <label>Años cotizados totales al jubilarte</label>
+        <input type="number" id="aniosCotizados" value="40" min="0" max="50" />
+        <small class="text-xs text-slate-500 block mt-1">Afecta a la tasa de sustitución.</small>
+      </div>
+      <div>
+        <label>Forzar tope de pensión máxima</label>
+        <select id="forzarTope">
+          <option value="si">Sí (pensiones topadas en máximo)</option>
+          <option value="no">No (solo % sustitución)</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="calc-card">
+    <h2>Resultados</h2>
+    <p class="text-sm text-slate-400 mb-4">
+      Los resultados están aproximados a partir de tus parámetros. Se asume salario neto mensual constante dentro de cada año.
+    </p>
+    <div class="text-sm text-slate-300 mb-4">
+      Años hasta la jubilación: <strong class="text-white text-lg ml-1" id="aniosRestantes">–</strong>
+    </div>
+
+    <div class="results-grid">
+      <div class="result-box">
+        <div class="result-label">Último sueldo neto (año jubilación)</div>
+        <div class="result-main" id="ultimoSueldoNominal">–</div>
+        <div class="result-sub">
+          Equivalente en euros de hoy:
+          <span class="highlight font-semibold" id="ultimoSueldoReal">–</span>
+        </div>
+      </div>
+      <div class="result-box">
+        <div class="result-label">Pensión neta teórica (% sustitución)</div>
+        <div class="result-main" id="pensionTeoricaNominal">–</div>
+        <div class="result-sub">
+          Sin tope máximo (solo %):
+          <span id="pensionSinTope">–</span>
+        </div>
+      </div>
+      <div class="result-box">
+        <div class="result-label">Pensión máxima futura proyectada</div>
+        <div class="result-main" id="pensionMaxFutura">–</div>
+        <div class="result-sub">
+          (Según "Pensión máxima hoy" y su crecimiento)
+        </div>
+      </div>
+      <div class="result-box border-emerald-500/30">
+        <div class="result-label">Pensión neta en EUROS DE HOY</div>
+        <div class="result-main highlight" id="pensionRealHoy">–</div>
+        <div class="result-sub">
+          Deflactada por inflación hasta el año de jubilación
+        </div>
+      </div>
+    </div>
+
+    <div class="text-xs text-slate-500 mt-4">
+      Nota: si está activado “forzar tope de pensión máxima”, la pensión utilizada es
+      <strong>mínimo(pensión teórica %, pensión máxima futura)</strong>.
+    </div>
+  </section>
+
+  <section class="calc-card">
+    <h2>Gráficas</h2>
+    <div class="grid gap-6 md:grid-cols-2">
+      <div>
+        <p class="text-sm text-slate-400 mb-2">Evolución del salario neto (nominal vs deflactado)</p>
+        <canvas id="salaryChart" height="200"></canvas>
+      </div>
+      <div>
+        <p class="text-sm text-slate-400 mb-2">Pensión teórica vs pensión máxima futura (nominal)</p>
+        <canvas id="pensionChart" height="200"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section class="calc-card">
+    <h2>Cálculo de Base Reguladora (simplificado)</h2>
+    <p class="text-sm text-slate-400 mb-4">
+      Aquí puedes ver cómo se forma la Base Reguladora: se usa la media (simplificada) de los últimos
+      30 años antes de la jubilación. Eso explica por qué la pensión es menor que el último sueldo.
+    </p>
+    <button class="btn-calc" id="calcBrBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+      Calcular BR real (últimos 30 años)
+    </button>
+    <div id="brSummary" class="br-summary">
+      Pulsa el botón para ver la tabla de salarios históricos y la Base Reguladora.
+    </div>
+    <div id="brTableContainer"></div>
+    <div class="mt-6">
+      <p class="text-sm text-slate-400 mb-2">Comparación: línea del último sueldo vs línea de Base Reguladora</p>
+      <canvas id="brChart" height="200"></canvas>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Elementos del DOM
+  const edadActualEl = document.getElementById('edadActual');
+  const edadJubilacionEl = document.getElementById('edadJubilacion');
+  const salarioActualEl = document.getElementById('salarioActual');
+  const crecimientoSalarialEl = document.getElementById('crecimientoSalarial');
+  const inflacionEl = document.getElementById('inflacion');
+  const crecimientoPensionMaxEl = document.getElementById('crecimientoPensionMax');
+  const tasaSustitucionEl = document.getElementById('tasaSustitucion');
+  const pensionMaxHoyEl = document.getElementById('pensionMaxHoy');
+  const aniosCotizadosEl = document.getElementById('aniosCotizados');
+  const forzarTopeEl = document.getElementById('forzarTope');
+
+  const crecimientoSalarialLabel = document.getElementById('crecimientoSalarialLabel');
+  const inflacionLabel = document.getElementById('inflacionLabel');
+  const crecimientoPensionMaxLabel = document.getElementById('crecimientoPensionMaxLabel');
+  const tasaSustitucionLabel = document.getElementById('tasaSustitucionLabel');
+
+  const aniosRestantesEl = document.getElementById('aniosRestantes');
+  const ultimoSueldoNominalEl = document.getElementById('ultimoSueldoNominal');
+  const ultimoSueldoRealEl = document.getElementById('ultimoSueldoReal');
+  const pensionTeoricaNominalEl = document.getElementById('pensionTeoricaNominal');
+  const pensionSinTopeEl = document.getElementById('pensionSinTope');
+  const pensionMaxFuturaEl = document.getElementById('pensionMaxFutura');
+  const pensionRealHoyEl = document.getElementById('pensionRealHoy');
+
+  const calcBrBtn = document.getElementById('calcBrBtn');
+  const brSummaryEl = document.getElementById('brSummary');
+  const brTableContainer = document.getElementById('brTableContainer');
+
+  let salaryChart = null;
+  let pensionChart = null;
+  let brChart = null;
+
+  // Datos para BR (últimos 30 años)
+  let brData = null;
+
+  function formatoEuro(valor) {
+    return valor.toLocaleString('es-ES', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }) + ' €';
+  }
+
+  function formatoPorcentaje(valor) {
+    return (valor * 100).toLocaleString('es-ES', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    }) + ' %';
+  }
+
+  function actualizarLabels() {
+    crecimientoSalarialLabel.textContent = crecimientoSalarialEl.value + ' %';
+    inflacionLabel.textContent = inflacionEl.value + ' %';
+    crecimientoPensionMaxLabel.textContent = crecimientoPensionMaxEl.value + ' %';
+    tasaSustitucionLabel.textContent = tasaSustitucionEl.value + ' %';
+  }
+
+  function recalcular() {
+    actualizarLabels();
+
+    const edadActual = parseFloat(edadActualEl.value) || 0;
+    const edadJubilacion = parseFloat(edadJubilacionEl.value) || 0;
+    const salarioActual = parseFloat(salarioActualEl.value) || 0;
+    const gSal = parseFloat(crecimientoSalarialEl.value) / 100;
+    const infl = parseFloat(inflacionEl.value) / 100;
+    const gPMax = parseFloat(crecimientoPensionMaxEl.value) / 100;
+    const tasaSust = parseFloat(tasaSustitucionEl.value) / 100;
+    const pensionMaxHoy = parseFloat(pensionMaxHoyEl.value) || 0;
+    const forzarTope = forzarTopeEl.value === 'si';
+
+    const aniosHastaJubilacion = Math.max(0, Math.round(edadJubilacion - edadActual));
+    aniosRestantesEl.textContent = aniosHastaJubilacion.toString();
+
+    if (aniosHastaJubilacion === 0 || salarioActual <= 0) {
+      ultimoSueldoNominalEl.textContent = '–';
+      ultimoSueldoRealEl.textContent = '–';
+      pensionTeoricaNominalEl.textContent = '–';
+      pensionSinTopeEl.textContent = '–';
+      pensionMaxFuturaEl.textContent = '–';
+      pensionRealHoyEl.textContent = '–';
+      actualizarGraficas([], [], [], [], []);
+      brData = null;
+      if (brChart) {
+        brChart.destroy();
+        brChart = null;
+      }
+      brSummaryEl.textContent = 'Pulsa el botón para ver la tabla de salarios históricos y la Base Reguladora.';
+      brTableContainer.innerHTML = '';
+      return;
+    }
+
+    // Cálculo del último sueldo nominal
+    const factorSalario = Math.pow(1 + gSal, aniosHastaJubilacion);
+    const ultimoSueldoNominal = salarioActual * factorSalario;
+
+    // Deflactor por inflación
+    const factorInflacion = Math.pow(1 + infl, aniosHastaJubilacion);
+    const ultimoSueldoReal = ultimoSueldoNominal / factorInflacion;
+
+    // Pensión máxima futura (nominal)
+    const factorPMax = Math.pow(1 + gPMax, aniosHastaJubilacion);
+    const pensionMaxFutura = pensionMaxHoy * factorPMax;
+
+    // Pensión teórica por % de sustitución (nominal)
+    const pensionSinTope = ultimoSueldoNominal * tasaSust;
+    const pensionTeoricaNominal = forzarTope
+      ? Math.min(pensionSinTope, pensionMaxFutura)
+      : pensionSinTope;
+
+    // Pensión real en euros de hoy (deflactada)
+    const pensionRealHoy = pensionTeoricaNominal / factorInflacion;
+
+    // Pintar resultados
+    ultimoSueldoNominalEl.textContent = formatoEuro(ultimoSueldoNominal);
+    ultimoSueldoRealEl.textContent = formatoEuro(ultimoSueldoReal);
+    pensionTeoricaNominalEl.textContent = formatoEuro(pensionTeoricaNominal);
+    pensionSinTopeEl.textContent = formatoEuro(pensionSinTope);
+    pensionMaxFuturaEl.textContent = formatoEuro(pensionMaxFutura);
+    pensionRealHoyEl.textContent = formatoEuro(pensionRealHoy);
+
+    // Datos año a año para gráficas generales
+    const labels = [];
+    const salarioNominalSerie = [];
+    const salarioRealSerie = [];
+    const pensionTeoricaSerie = [];
+    const pensionMaxSerie = [];
+
+    for (let i = 0; i <= aniosHastaJubilacion; i++) {
+      const yearLabel = 'Año ' + i;
+      labels.push(yearLabel);
+
+      const sNom = salarioActual * Math.pow(1 + gSal, i);
+      const fInfl = Math.pow(1 + infl, i);
+      const sReal = sNom / fInfl;
+
+      salarioNominalSerie.push(sNom);
+      salarioRealSerie.push(sReal);
+
+      const pMax = pensionMaxHoy * Math.pow(1 + gPMax, i);
+      const pSinTope = sNom * tasaSust;
+      const pNom = forzarTope ? Math.min(pSinTope, pMax) : pSinTope;
+
+      pensionTeoricaSerie.push(pNom);
+      pensionMaxSerie.push(pMax);
+    }
+
+    actualizarGraficas(labels, salarioNominalSerie, salarioRealSerie, pensionTeoricaSerie, pensionMaxSerie);
+
+    // --- Datos para Base Reguladora: últimos 30 años antes de la jubilación ---
+    const totalPuntos = salarioNominalSerie.length;
+    const nBR = Math.min(30, totalPuntos);
+    const inicio = totalPuntos - nBR;
+
+    const brLabels = [];
+    const brSalaries = [];
+    for (let i = inicio; i < totalPuntos; i++) {
+      const distanciaJub = (totalPuntos - 1) - i;
+      const etiqueta = distanciaJub === 0
+        ? 'J'
+        : 'J-' + distanciaJub;
+      brLabels.push(etiqueta);
+      brSalaries.push(salarioNominalSerie[i]);
+    }
+
+    let suma = 0;
+    brSalaries.forEach(v => suma += v);
+    const baseReguladora = nBR > 0 ? (suma / nBR) : 0;
+
+    brData = {
+      labels: brLabels,
+      salaries: brSalaries,
+      baseReguladora,
+      ultimoSueldo: ultimoSueldoNominal
+    };
+  }
+
+  function actualizarGraficas(labels, salarioNominalSerie, salarioRealSerie, pensionTeoricaSerie, pensionMaxSerie) {
+    const salaryCtx = document.getElementById('salaryChart').getContext('2d');
+    const pensionCtx = document.getElementById('pensionChart').getContext('2d');
+
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.font.family = 'system-ui, sans-serif';
+
+    if (salaryChart) salaryChart.destroy();
+    if (pensionChart) pensionChart.destroy();
+
+    if (!labels.length) return;
+
+    salaryChart = new Chart(salaryCtx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Salario nominal',
+            data: salarioNominalSerie,
+            borderColor: '#3b82f6',
+            backgroundColor: '#3b82f6',
+            borderWidth: 2,
+            tension: 0.2
+          },
+          {
+            label: 'Salario deflactado (euros de hoy)',
+            data: salarioRealSerie,
+            borderColor: '#10b981',
+            backgroundColor: '#10b981',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            tension: 0.2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          y: {
+            beginAtZero: false,
+            ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' }
+          }
+        }
+      }
+    });
+
+    pensionChart = new Chart(pensionCtx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Pensión teórica (nominal)',
+            data: pensionTeoricaSerie,
+            borderColor: '#8b5cf6',
+            backgroundColor: '#8b5cf6',
+            borderWidth: 2,
+            tension: 0.2
+          },
+          {
+            label: 'Pensión máxima futura',
+            data: pensionMaxSerie,
+            borderColor: '#f59e0b',
+            backgroundColor: '#f59e0b',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            tension: 0.2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          y: {
+            beginAtZero: false,
+            ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' }
+          }
+        }
+      }
+    });
+  }
+
+  function renderBrTableAndChart() {
+    if (!brData) {
+      brSummaryEl.textContent = 'Primero ajusta los parámetros para que haya años hasta la jubilación y vuelve a pulsar.';
+      brTableContainer.innerHTML = '';
+      if (brChart) {
+        brChart.destroy();
+        brChart = null;
+      }
+      return;
+    }
+
+    const { labels, salaries, baseReguladora, ultimoSueldo } = brData;
+    const ratio = baseReguladora / ultimoSueldo;
+
+    brSummaryEl.innerHTML =
+      'Base Reguladora media (simplificada) de los últimos ' + labels.length +
+      ' años: <span>' + formatoEuro(baseReguladora) +
+      '</span>. Esto equivale al <span>' + formatoPorcentaje(ratio) +
+      '</span> de tu último sueldo estimado (' + formatoEuro(ultimoSueldo) + ').';
+
+    let html = '<div class="overflow-x-auto"><table class="br-table"><thead><tr>' +
+      '<th>Año relativo</th><th>Salario mensual estimado</th>' +
+      '</tr></thead><tbody>';
+    for (let i = 0; i < labels.length; i++) {
+      html += '<tr><td>' + labels[i] + '</td><td>' + formatoEuro(salaries[i]) + '</td></tr>';
+    }
+    html += '</tbody></table></div>';
+    brTableContainer.innerHTML = html;
+
+    const brCtx = document.getElementById('brChart').getContext('2d');
+    if (brChart) brChart.destroy();
+
+    const serieUltimo = labels.map(() => ultimoSueldo);
+    const serieBR = labels.map(() => baseReguladora);
+
+    brChart = new Chart(brCtx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Línea último sueldo (constante)',
+            data: serieUltimo,
+            borderColor: '#3b82f6',
+            borderWidth: 2,
+            tension: 0,
+          },
+          {
+            label: 'Línea Base Reguladora media',
+            data: serieBR,
+            borderColor: '#ef4444',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            tension: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          y: {
+            beginAtZero: false,
+            ticks: { callback: (value) => value.toLocaleString('es-ES') + ' €' }
+          }
+        }
+      }
+    });
+  }
+
+  [
+    edadActualEl, edadJubilacionEl, salarioActualEl,
+    crecimientoSalarialEl, inflacionEl, crecimientoPensionMaxEl,
+    tasaSustitucionEl, pensionMaxHoyEl, aniosCotizadosEl, forzarTopeEl
+  ].forEach(el => {
+    el.addEventListener('input', recalcular);
+  });
+
+  calcBrBtn.addEventListener('click', renderBrTableAndChart);
+
+  // Inicialización
+  recalcular();
+</script>
