@@ -1,12 +1,24 @@
 ---
 layout: layout.njk
 title: Simulador de Jubilación
+description: Aplicación interactiva para proyectar la pensión pública de jubilación, estimar el último sueldo neto, calcular la Base Reguladora y deflactar los resultados a euros de hoy.
 permalink: /aplicaciones/jubilacion/
 ---
 
 <!-- Cargamos Chart.js solo para esta herramienta -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Simulador de Jubilación",
+  "operatingSystem": "All",
+  "applicationCategory": "FinanceApplication",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "url": "https://www.manoelfolgueira.es/aplicaciones/jubilacion/",
+  "description": "Aplicación interactiva para proyectar la pensión pública de jubilación, estimar el último sueldo neto, calcular la Base Reguladora y deflactar los resultados a euros de hoy."
+}
+</script>
 <style>
   .calc-card {
     background: #0f172a; /* Igualado al bg-slate-900 del index */
