@@ -1,0 +1,444 @@
+---
+layout: layout.njk
+title: Calculadora de Interés Compuesto
+permalink: /aplicaciones/interes-compuesto/
+---
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  .calc-card {
+    background: #0f172a;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid #1e293b;
+  }
+  .calc-card h1, .calc-card h2 {
+    margin-top: 0;
+    color: #f9fafb;
+    font-weight: 800;
+  }
+  .calc-card h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .calc-card h2 { font-size: 1.3rem; margin-bottom: 1rem; margin-top: 1.5rem; }
+  .calc-card label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    color: #cbd5f5;
+  }
+  .calc-card input[type="number"],
+  .calc-card input[type="range"] {
+    width: 100%;
+  }
+  .calc-card input[type="number"] {
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #334155;
+    background: #020617;
+    color: #e5e7eb;
+    box-sizing: border-box;
+  }
+  .calc-card select {
+    width: 100%;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #334155;
+    background: #020617;
+    color: #e5e7eb;
+  }
+  .range-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .range-wrapper span {
+    font-size: 0.85rem;
+    min-width: 3.5rem;
+    text-align: right;
+    color: #9ca3af;
+  }
+  .calc-card input[type="range"] {
+    accent-color: #10b981;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #6ee7b7;
+  }
+  .results-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  @media (min-width: 768px) {
+    .results-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .result-box {
+    background: radial-gradient(circle at top left, #1e293b, #0f172a);
+    border-radius: 0.9rem;
+    padding: 1rem;
+    border: 1px solid #334155;
+  }
+  .result-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+  .result-main {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    color: #f8fafc;
+  }
+  .result-sub {
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+  .highlight {
+    color: #10b981;
+  }
+  canvas {
+    background: #020617;
+    border-radius: 0.75rem;
+    border: 1px solid #1e293b;
+    padding: 0.5rem;
+  }
+  .br-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+  }
+  .br-table th, .br-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #1e293b;
+    text-align: right;
+  }
+  .br-table th:first-child, .br-table td:first-child {
+    text-align: left;
+  }
+  .br-table thead {
+    background: #0f172a;
+    color: #94a3b8;
+  }
+  .br-table tbody tr:nth-child(odd) {
+    background: rgba(30, 41, 59, 0.4);
+  }
+</style>
+
+<div class="w-full">
+  <header class="calc-card">
+    <h1>Calculadora de Interés Compuesto Avanzada</h1>
+    <p class="text-slate-400 text-sm mb-3">
+      Proyecta el crecimiento de tu patrimonio analizando el efecto del interés compuesto, la inflación y el impacto fiscal progresivo.
+    </p>
+    <span class="badge">Simulación Patrimonial Avanzada</span>
+  </header>
+
+  <section class="calc-card">
+    <h2>Estrategia de Inversión</h2>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div>
+        <label>Capital Inicial (€)</label>
+        <input type="number" id="capitalInicial" value="10000" step="100" min="0" />
+      </div>
+      <div>
+        <label>Aportación Mensual (€)</label>
+        <input type="number" id="aportacionMensual" value="300" step="10" min="0" />
+      </div>
+      <div>
+        <label>Plazo (Años)</label>
+        <input type="number" id="anios" value="25" min="1" max="60" />
+      </div>
+    </div>
+
+    <h2>Parámetros de Mercado y Ajustes</h2>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label>Rentabilidad Anual Estimada (%)</label>
+        <div class="range-wrapper">
+          <input type="range" id="tasaInteres" min="0" max="15" step="0.1" value="7" />
+          <span id="tasaInteresLabel">7.0 %</span>
+        </div>
+      </div>
+      <div>
+        <label>Incremento Anual de Aportación (% o IPC)</label>
+        <div class="range-wrapper">
+          <input type="range" id="crecimientoAportacion" min="0" max="10" step="0.1" value="2" />
+          <span id="crecimientoAportacionLabel">2.0 %</span>
+        </div>
+      </div>
+      <div>
+        <label>Inflación Anual (%) <span class="text-slate-500">(Para cálculo deflactado)</span></label>
+        <div class="range-wrapper">
+          <input type="range" id="inflacion" min="0" max="6" step="0.1" value="2" />
+          <span id="inflacionLabel">2.0 %</span>
+        </div>
+      </div>
+      <div>
+        <label>Cálculo Fiscal (Tramos del Ahorro IRPF)</label>
+        <select id="aplicarImpuestos">
+          <option value="si">Aplicar deducción fiscal de plusvalías</option>
+          <option value="no">Mostrar solo capital bruto</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="calc-card">
+    <h2>Proyección de Resultados</h2>
+    <div class="results-grid">
+      <div class="result-box">
+        <div class="result-label">Capital Total Bruto</div>
+        <div class="result-main" id="capitalBrutoNominal">–</div>
+        <div class="result-sub">
+          Total aportado: <span id="totalAportadoNominal" class="text-slate-300">–</span>
+        </div>
+      </div>
+      <div class="result-box">
+        <div class="result-label">Intereses Generados (Brutos)</div>
+        <div class="result-main text-purple-400" id="interesesBrutos">–</div>
+        <div class="result-sub">
+          Multiplicador: <span id="multiplicadorCapital" class="text-slate-300">–</span>
+        </div>
+      </div>
+      <div class="result-box">
+        <div class="result-label">Impuestos Estimados</div>
+        <div class="result-main text-red-400" id="impuestosAcumulados">–</div>
+        <div class="result-sub">
+          Tipo medio real: <span id="tipoMedioFiscal" class="text-slate-300">–</span>
+        </div>
+      </div>
+      <div class="result-box border-emerald-500/30">
+        <div class="result-label">Capital Neto (Euros de Hoy)</div>
+        <div class="result-main highlight" id="capitalNetoReal">–</div>
+        <div class="result-sub">
+          Neto Nominal: <span id="capitalNetoNominal" class="text-slate-300">–</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="calc-card">
+    <h2>Curva de Crecimiento Patrimonial</h2>
+    <div class="mt-2">
+      <canvas id="compuestoChart" height="120"></canvas>
+    </div>
+  </section>
+
+  <section class="calc-card">
+    <h2>Desglose Anual Temporal</h2>
+    <div id="tablaContainer" class="overflow-x-auto"></div>
+  </section>
+</div>
+
+<script>
+  const inputIds = ['capitalInicial', 'aportacionMensual', 'anios', 'tasaInteres', 'crecimientoAportacion', 'inflacion', 'aplicarImpuestos'];
+
+  const capitalInicialEl = document.getElementById('capitalInicial');
+  const aportacionMensualEl = document.getElementById('aportacionMensual');
+  const aniosEl = document.getElementById('anios');
+  const tasaInteresEl = document.getElementById('tasaInteres');
+  const crecimientoAportacionEl = document.getElementById('crecimientoAportacion');
+  const inflacionEl = document.getElementById('inflacion');
+  const aplicarImpuestosEl = document.getElementById('aplicarImpuestos');
+
+  const tasaInteresLabel = document.getElementById('tasaInteresLabel');
+  const crecimientoAportacionLabel = document.getElementById('crecimientoAportacionLabel');
+  const inflacionLabel = document.getElementById('inflacionLabel');
+
+  const capitalBrutoNominalEl = document.getElementById('capitalBrutoNominal');
+  const totalAportadoNominalEl = document.getElementById('totalAportadoNominal');
+  const interesesBrutosEl = document.getElementById('interesesBrutos');
+  const multiplicadorCapitalEl = document.getElementById('multiplicadorCapital');
+  const impuestosAcumuladosEl = document.getElementById('impuestosAcumulados');
+  const tipoMedioFiscalEl = document.getElementById('tipoMedioFiscal');
+  const capitalNetoRealEl = document.getElementById('capitalNetoReal');
+  const capitalNetoNominalEl = document.getElementById('capitalNetoNominal');
+  const tablaContainer = document.getElementById('tablaContainer');
+
+  let compuestoChart = null;
+
+  function loadConfig() {
+    try {
+      const confStr = localStorage.getItem('mf_aplicaciones_config');
+      if (confStr) {
+        const conf = JSON.parse(confStr);
+        if (conf && conf.interes_compuesto) {
+          inputIds.forEach(id => {
+            if (conf.interes_compuesto[id] !== undefined) {
+              document.getElementById(id).value = conf.interes_compuesto[id];
+            }
+          });
+        }
+      }
+    } catch (e) { console.error(e); }
+  }
+
+  function saveConfig() {
+    try {
+      let conf = JSON.parse(localStorage.getItem('mf_aplicaciones_config') || '{}');
+      conf.interes_compuesto = {};
+      inputIds.forEach(id => {
+        conf.interes_compuesto[id] = document.getElementById(id).value;
+      });
+      localStorage.setItem('mf_aplicaciones_config', JSON.stringify(conf));
+    } catch (e) { console.error(e); }
+  }
+
+  function formatoEuro(val) {
+    return val.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
+  }
+
+  // Lógica progresiva de tramos fiscales del ahorro en España
+  function calcularImpuestoEspana(plusvalia) {
+    if (plusvalia <= 0) return 0;
+    let impuesto = 0;
+    if (plusvalia <= 6000) {
+      impuesto = plusvalia * 0.19;
+    } else if (plusvalia <= 50000) {
+      impuesto = (6000 * 0.19) + ((plusvalia - 6000) * 0.21);
+    } else if (plusvalia <= 200000) {
+      impuesto = (6000 * 0.19) + (44000 * 0.21) + ((plusvalia - 50000) * 0.23);
+    } else if (plusvalia <= 300000) {
+      impuesto = (6000 * 0.19) + (44000 * 0.21) + (150000 * 0.23) + ((plusvalia - 200000) * 0.27);
+    } else {
+      impuesto = (6000 * 0.19) + (44000 * 0.21) + (150000 * 0.23) + (100000 * 0.27) + ((plusvalia - 300000) * 0.28);
+    }
+    return impuesto;
+  }
+
+  function calcular() {
+    tasaInteresLabel.textContent = tasaInteresEl.value + ' %';
+    crecimientoAportacionLabel.textContent = crecimientoAportacionEl.value + ' %';
+    inflacionLabel.textContent = inflacionEl.value + ' %';
+
+    const capInicial = parseFloat(capitalInicialEl.value) || 0;
+    let aportMensual = parseFloat(aportacionMensualEl.value) || 0;
+    const anios = parseInt(aniosEl.value) || 1;
+    const rAnual = (parseFloat(tasaInteresEl.value) || 0) / 100;
+    const cAnual = (parseFloat(crecimientoAportacionEl.value) || 0) / 100;
+    const infAnual = (parseFloat(inflacionEl.value) || 0) / 100;
+    const conImpuestos = aplicarImpuestosEl.value === 'si';
+
+    const rMensual = Math.pow(1 + rAnual, 1 / 12) - 1;
+
+    let totalAportado = capInicial;
+    let saldoBruto = capInicial;
+
+    let chartLabels = ['Año 0'];
+    let chartAportado = [capInicial];
+    let chartSaldo = [capInicial];
+
+    let htmlTabla = '<table class="br-table"><thead><tr><th>Año</th><th>Aportación Mensual</th><th>Total Aportado</th><th>Intereses Acum.</th><th>Capital Bruto</th><th>Capital Neto (Hoy)</th></tr></thead><tbody>';
+    htmlTabla += `<tr><td>0</td><td>${formatoEuro(aportMensual)}</td><td>${formatoEuro(totalAportado)}</td><td>0 €</td><td>${formatoEuro(saldoBruto)}</td><td>${formatoEuro(saldoBruto)}</td></tr>`;
+
+    for (let a = 1; a <= anios; a++) {
+      for (let m = 1; m <= 12; m++) {
+        saldoBruto += aportMensual;
+        saldoBruto *= (1 + rMensual);
+        totalAportado += aportMensual;
+      }
+
+      let plusvalia = Math.max(0, saldoBruto - totalAportado);
+      let impuestos = conImpuestos ? calcularImpuestoEspana(plusvalia) : 0;
+      let saldoNetoNominal = saldoBruto - impuestos;
+
+      let factorInflacion = Math.pow(1 + infAnual, a);
+      let saldoNetoReal = saldoNetoNominal / factorInflacion;
+
+      chartLabels.push('Año ' + a);
+      chartAportado.push(totalAportado);
+      chartSaldo.push(saldoBruto);
+
+      htmlTabla += `<tr>
+        <td>${a}</td>
+        <td>${formatoEuro(aportMensual)}</td>
+        <td>${formatoEuro(totalAportado)}</td>
+        <td class="text-purple-400">${formatoEuro(plusvalia)}</td>
+        <td class="font-semibold text-white">${formatoEuro(saldoBruto)}</td>
+        <td class="text-emerald-400 font-bold">${formatoEuro(saldoNetoReal)}</td>
+      </tr>`;
+
+      // Aplicar incremento anual sobre la aportación para el año siguiente
+      aportMensual *= (1 + cAnual);
+    }
+    htmlTabla += '</tbody></table>';
+    tablaContainer.innerHTML = htmlTabla;
+
+    // Resumen de cajas superiores
+    let plusvaliaFinal = Math.max(0, saldoBruto - totalAportado);
+    let totalImpuestos = conImpuestos ? calcularImpuestoEspana(plusvaliaFinal) : 0;
+    let netoNominal = saldoBruto - totalImpuestos;
+    let netoReal = netoNominal / Math.pow(1 + infAnual, anios);
+
+    capitalBrutoNominalEl.textContent = formatoEuro(saldoBruto);
+    totalAportadoNominalEl.textContent = formatoEuro(totalAportado);
+    interesesBrutosEl.textContent = formatoEuro(plusvaliaFinal);
+    multiplicadorCapitalEl.textContent = 'x' + (saldoBruto / (totalAportado || 1)).toFixed(2);
+    impuestosAcumuladosEl.textContent = conImpuestos ? formatoEuro(totalImpuestos) : '0 €';
+    tipoMedioFiscalEl.textContent = plusvaliaFinal > 0 ? ((totalImpuestos / plusvaliaFinal) * 100).toFixed(1) + ' %' : '0 %';
+    capitalNetoRealEl.textContent = formatoEuro(netoReal);
+    capitalNetoNominalEl.textContent = formatoEuro(netoNominal);
+
+    renderChart(chartLabels, chartAportado, chartSaldo);
+    saveConfig();
+  }
+
+  function renderChart(labels, aportado, total) {
+    const ctx = document.getElementById('compuestoChart').getContext('2d');
+    
+    if (compuestoChart) compuestoChart.destroy();
+
+    compuestoChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Capital Final Bruto',
+            data: total,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.05)',
+            fill: true,
+            borderWidth: 2,
+            tension: 0.15
+          },
+          {
+            label: 'Total Capital Aportado',
+            data: aportado,
+            borderColor: '#3b82f6',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            tension: 0.1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#94a3b8' } } },
+        scales: {
+          y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', callback: (v) => v.toLocaleString('es-ES') + ' €' } },
+          x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+        }
+      }
+    });
+  }
+
+  inputIds.forEach(id => {
+    document.getElementById(id).addEventListener('input', calcular);
+  });
+
+  loadConfig();
+  calcular();
+</script>
