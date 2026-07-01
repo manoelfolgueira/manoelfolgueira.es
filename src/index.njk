@@ -32,37 +32,37 @@ title: Panel
 
     <!-- SECCIÓN: APLICACIONES -->
     <section id="aplicaciones" class="scroll-mt-24">
-        <!-- Cabecera modificada con Botones de Configuración -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 border-b border-slate-800 pb-2 gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-slate-800 pb-2 gap-4">
             <h3 class="text-xl font-bold text-white">Aplicaciones</h3>
             <div class="flex gap-2">
-                <!-- Botón Importar -->
                 <button onclick="document.getElementById('fileImport').click()" class="px-3 py-1.5 text-xs font-medium bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                     Importar Config
                 </button>
-                <!-- Botón Exportar -->
                 <button onclick="exportarConfig()" class="px-3 py-1.5 text-xs font-medium bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                     Exportar Config
                 </button>
-                <!-- Input invisible para subir el archivo .json -->
                 <input type="file" id="fileImport" class="hidden" accept=".json" onchange="importarConfig(event)">
             </div>
         </div>
         
+        <p class="text-xs text-slate-500 mb-8 italic">
+            Las configuraciones se guardan en tu navegador. Usa los botones superiores para exportar tus ajustes o importar una configuración desde otro equipo o navegador.
+        </p>
+        
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {% set tools = [
+            {% set apps = [
                 { 
                     title: "Simulador de Jubilación", 
                     desc: "Calcula tu pensión futura, último sueldo y equivalente en euros de hoy.", 
                     icon: "👴🏼", 
-                    url: "/aplicaciones/jubilacion/", 
+                    url: "/apps/jubilacion/", 
                     label: "Acceder directamente" 
                 }
             ] %}
             
-            {% for item in tools %}
+            {% for item in apps %}
             <div class="p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex flex-col justify-between hover:border-slate-700 transition">
                 <div>
                     <div class="text-3xl mb-4">{{ item.icon }}</div>
@@ -100,7 +100,7 @@ title: Panel
         // Forzamos la descarga del archivo con un enlace temporal
         const a = document.createElement('a');
         a.href = url;
-        a.download = "manoelfolgueira_config.json";
+        a.download = "manoelfolgueira.es_aplicaciones_config.json";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
