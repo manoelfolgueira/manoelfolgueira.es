@@ -52,17 +52,17 @@ title: Panel
         </p>
         
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {% set apps = [
+            {% set aplicaciones = [
                 { 
                     title: "Simulador de Jubilación", 
                     desc: "Calcula tu pensión futura, último sueldo y equivalente en euros de hoy.", 
                     icon: "👴🏼", 
-                    url: "/apps/jubilacion/", 
+                    url: "/aplicaciones/jubilacion/", 
                     label: "Acceder directamente" 
                 }
             ] %}
             
-            {% for item in apps %}
+            {% for item in aplicaciones %}
             <div class="p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex flex-col justify-between hover:border-slate-700 transition">
                 <div>
                     <div class="text-3xl mb-4">{{ item.icon }}</div>
@@ -91,7 +91,7 @@ title: Panel
 <script>
     function exportarConfig() {
         // Obtenemos la configuración del navegador (o creamos un objeto vacío si no hay nada)
-        const data = localStorage.getItem('mf_apps_config') || '{}';
+        const data = localStorage.getItem('mf_aplicaciones_config') || '{}';
         
         // Creamos el archivo virtual
         const blob = new Blob([data], { type: "application/json" });
@@ -118,7 +118,7 @@ title: Panel
                 const json = JSON.parse(e.target.result);
                 
                 // Lo guardamos en el localStorage global
-                localStorage.setItem('mf_apps_config', JSON.stringify(json));
+                localStorage.setItem('mf_aplicaciones_config', JSON.stringify(json));
                 alert("✅ Configuración importada con éxito.\n\nLos datos se aplicarán automáticamente al abrir las aplicaciones.");
             } catch (err) {
                 alert("❌ Error: El archivo no tiene el formato correcto.");
