@@ -18,11 +18,23 @@ title: Panel
         </div>
     </a>
 
+    <!-- BUSCADOR DINÁMICO -->
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        <input type="text" id="buscador" placeholder="Buscar aplicaciones, documentos, calculadoras..." class="w-full bg-slate-900/80 border border-slate-800 focus:border-emerald-500 text-white rounded-xl pl-12 pr-4 py-4 shadow-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 transition placeholder-slate-500 text-lg">
+    </div>
+
     <!-- SECCIÓN: DOCUMENTACIÓN -->
-    <section id="documentacion" class="scroll-mt-24">
-        <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-2">Documentación</h3>
+    <section id="documentacion" class="scroll-mt-24 search-section">
+        <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-2 section-title">Documentación</h3>
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <div class="p-8 rounded-2xl bg-slate-900/50 border border-slate-800 border-dashed flex flex-col justify-center items-center text-center min-h-[220px]">
+            <div class="searchable-item p-8 rounded-2xl bg-slate-900/50 border border-slate-800 border-dashed flex flex-col justify-center items-center text-center min-h-[220px]" 
+                 data-title="Próximos artículos" 
+                 data-desc="Aquí se añadirán las guías de inversión y filosofía de optimización.">
                 <span class="text-2xl mb-2 opacity-50">📄</span>
                 <h4 class="text-lg font-bold text-slate-400 mb-1">Próximos artículos</h4>
                 <p class="text-sm text-slate-500">Aquí se añadirán las guías de inversión y filosofía de optimización.</p>
@@ -31,9 +43,9 @@ title: Panel
     </section>
 
     <!-- SECCIÓN: APLICACIONES -->
-    <section id="aplicaciones" class="scroll-mt-24">
+    <section id="aplicaciones" class="scroll-mt-24 search-section">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-slate-800 pb-2 gap-4">
-            <h3 class="text-xl font-bold text-white">Aplicaciones</h3>
+            <h3 class="text-xl font-bold text-white section-title">Aplicaciones</h3>
             <div class="flex gap-2">
                 <button onclick="document.getElementById('fileImport').click()" class="px-3 py-1.5 text-xs font-medium bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
@@ -47,30 +59,34 @@ title: Panel
             </div>
         </div>
         
-        <p class="text-xs text-slate-500 mb-8 italic">
+        <p class="text-xs text-slate-500 mb-8 italic section-desc">
             Las configuraciones se guardan en tu navegador. Usa los botones superiores para exportar tus ajustes o importar una configuración desde otro equipo o navegador.
         </p>
         
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Datos de tus aplicaciones (Aviso: Variable cambiada a aplicaciones) -->
             {% set aplicaciones = [
                 { 
                     title: "Interés Compuesto", 
                     desc: "Proyecciones patrimoniales de alta fidelidad con inflación y cálculo de IRPF progresivo por tramos.", 
                     icon: "📈", 
                     url: "/aplicaciones/interes-compuesto/", 
-                    label: "Abrir" 
+                    label: "Abrir calculadora" 
                 },
                 { 
                     title: "Simulador de Jubilación", 
                     desc: "Calcula tu pensión futura, último sueldo y equivalente en euros de hoy.", 
                     icon: "👴🏼", 
                     url: "/aplicaciones/jubilacion/", 
-                    label: "Abrir" 
+                    label: "Abrir aplicación" 
                 }
             ] %}
             
             {% for item in aplicaciones %}
-            <div class="p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex flex-col justify-between hover:border-slate-700 transition">
+            <div class="searchable-item p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex flex-col justify-between hover:border-slate-700 transition"
+                 data-title="{{ item.title }}" 
+                 data-desc="{{ item.desc }}">
+                 
                 <div>
                     <div class="text-3xl mb-4">{{ item.icon }}</div>
                     <h4 class="text-xl font-bold text-white mb-2">{{ item.title }}</h4>
@@ -91,23 +107,57 @@ title: Panel
             </div>
             {% endfor %}
         </div>
+        
+        <div class="no-results hidden col-span-full text-center py-8 text-slate-500 border border-slate-800 border-dashed rounded-2xl bg-slate-900/30">
+            No se han encontrado resultados en esta categoría.
+        </div>
     </section>
+
 </div>
 
-<!-- LÓGICA DE EXPORTAR/IMPORTAR: Esto es lo que da vida a los botones de arriba -->
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buscador = document.getElementById('buscador');
+        const secciones = document.querySelectorAll('.search-section');
+
+        buscador.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+
+            secciones.forEach(seccion => {
+                const items = seccion.querySelectorAll('.searchable-item');
+                let itemsVisibles = 0;
+
+                items.forEach(item => {
+                    const title = item.getAttribute('data-title').toLowerCase();
+                    const desc = item.getAttribute('data-desc').toLowerCase();
+                    
+                    if (title.includes(query) || desc.includes(query)) {
+                        item.style.display = '';
+                        itemsVisibles++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                const noResultsMsg = seccion.querySelector('.no-results');
+                if (noResultsMsg) {
+                    if (itemsVisibles === 0 && items.length > 0) {
+                        noResultsMsg.classList.remove('hidden');
+                    } else {
+                        noResultsMsg.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    });
+
     function exportarConfig() {
-        // Obtenemos la configuración del navegador (o creamos un objeto vacío si no hay nada)
         const data = localStorage.getItem('mf_aplicaciones_config') || '{}';
-        
-        // Creamos el archivo virtual
         const blob = new Blob([data], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        
-        // Forzamos la descarga del archivo con un enlace temporal
         const a = document.createElement('a');
         a.href = url;
-        a.download = "manoelfolgueira.es_aplicaciones_config.json";
+        a.download = "manoelfolgueira_config.json";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -121,16 +171,12 @@ title: Panel
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                // Comprobamos si el archivo tiene formato JSON correcto
                 const json = JSON.parse(e.target.result);
-                
-                // Lo guardamos en el localStorage global
                 localStorage.setItem('mf_aplicaciones_config', JSON.stringify(json));
                 alert("✅ Configuración importada con éxito.\n\nLos datos se aplicarán automáticamente al abrir las aplicaciones.");
             } catch (err) {
                 alert("❌ Error: El archivo no tiene el formato correcto.");
             }
-            // Limpiamos el input por si quieres volver a subir el mismo archivo después
             event.target.value = ''; 
         };
         reader.readAsText(file);
