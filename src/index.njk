@@ -5,6 +5,7 @@ title: Panel
 
 <div class="space-y-16 py-6" style="scroll-behavior: smooth;">
     
+    <!-- El bloque protagonista -->
     <a href="/" class="group flex items-center gap-6 p-8 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition shadow-lg">
         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-emerald-900/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -17,9 +18,9 @@ title: Panel
         </div>
     </a>
 
+    <!-- SECCIÓN: DOCUMENTACIÓN -->
     <section id="documentacion" class="scroll-mt-24">
         <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-2">Documentación</h3>
-        
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div class="p-8 rounded-2xl bg-slate-900/50 border border-slate-800 border-dashed flex flex-col justify-center items-center text-center min-h-[220px]">
                 <span class="text-2xl mb-2 opacity-50">📄</span>
@@ -29,8 +30,26 @@ title: Panel
         </div>
     </section>
 
+    <!-- SECCIÓN: HERRAMIENTAS -->
     <section id="herramientas" class="scroll-mt-24">
-        <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-2">Herramientas</h3>
+        <!-- Cabecera modificada con Botones de Configuración -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 border-b border-slate-800 pb-2 gap-4">
+            <h3 class="text-xl font-bold text-white">Herramientas</h3>
+            <div class="flex gap-2">
+                <!-- Botón Importar -->
+                <button onclick="document.getElementById('fileImport').click()" class="px-3 py-1.5 text-xs font-medium bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                    Importar Config
+                </button>
+                <!-- Botón Exportar -->
+                <button onclick="exportarConfig()" class="px-3 py-1.5 text-xs font-medium bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                    Exportar Config
+                </button>
+                <!-- Input invisible para subir el archivo .json -->
+                <input type="file" id="fileImport" class="hidden" accept=".json" onchange="importarConfig(event)">
+            </div>
+        </div>
         
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {% set tools = [
@@ -56,7 +75,6 @@ title: Panel
                         <span>{{ item.label }}</span>
                         <span class="inline-block transition-transform group-hover/btn:translate-x-0.5">→</span>
                     </a>
-                    
                     <a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" class="p-2.5 bg-slate-800/20 hover:bg-slate-800/60 border border-slate-800 hover:border-slate-500 rounded-xl text-slate-400 hover:text-emerald-400 transition" title="Abrir en una pestaña adicional">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -67,5 +85,47 @@ title: Panel
             {% endfor %}
         </div>
     </section>
-
 </div>
+
+<!-- LÓGICA DE EXPORTAR/IMPORTAR: Esto es lo que da vida a los botones de arriba -->
+<script>
+    function exportarConfig() {
+        // Obtenemos la configuración del navegador (o creamos un objeto vacío si no hay nada)
+        const data = localStorage.getItem('mf_apps_config') || '{}';
+        
+        // Creamos el archivo virtual
+        const blob = new Blob([data], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        
+        // Forzamos la descarga del archivo con un enlace temporal
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "manoelfolgueira_config.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function importarConfig(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                // Comprobamos si el archivo tiene formato JSON correcto
+                const json = JSON.parse(e.target.result);
+                
+                // Lo guardamos en el localStorage global
+                localStorage.setItem('mf_apps_config', JSON.stringify(json));
+                alert("✅ Configuración importada con éxito.\n\nLos datos se aplicarán automáticamente al abrir las herramientas.");
+            } catch (err) {
+                alert("❌ Error: El archivo no tiene el formato correcto.");
+            }
+            // Limpiamos el input por si quieres volver a subir el mismo archivo después
+            event.target.value = ''; 
+        };
+        reader.readAsText(file);
+    }
+</script>
