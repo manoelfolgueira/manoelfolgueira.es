@@ -2,8 +2,19 @@
 <html lang="es" class="bg-slate-900 text-slate-100">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }} | Manoel Folgueira</title>
-    <!-- Favicon centralizado para todo el sitio -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% if title %}{{ title }} | manoelfolgueira.es{% else %}manoelfolgueira.es | Finanzas Personales Sistemáticas{% endif %}</title>
+    <meta name="description" content="{{ description | default('Herramientas avanzadas y simuladores matemáticos independientes para la optimización del patrimonio, interés compuesto y estrategia FIRE.') }}">
+    <link rel="canonical" href="https://www.manoelfolgueira.es{{ permalink }}">
+
+    <meta property="og:site_name" content="manoelfolgueira.es">
+    <meta property="og:title" content="{% if title %}{{ title }}{% else %}Optimización Financiera Sistemática{% endif %}">
+    <meta property="og:description" content="{{ description | default('Simuladores matemáticos y modelos de planificación financiera local-first.') }}">
+    <meta property="og:url" content="https://www.manoelfolgueira.es{{ permalink }}">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://www.manoelfolgueira.es/res/img/og-preview.jpg">
+
     <link rel="icon" type="image/svg+xml" href="/res/img/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
