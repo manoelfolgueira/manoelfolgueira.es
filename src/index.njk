@@ -3,19 +3,27 @@ layout: layout.njk
 title: Panel
 ---
 
-<div class="space-y-16 py-6" style="scroll-behavior: smooth;">
+<div class="space-y-10 py-6" style="scroll-behavior: smooth;">
     
-    <div class="relative">
-        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <svg class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+    <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl">
+        <h1 class="text-3xl font-bold text-white mb-2">Centro de Control</h1>
+        <p class="text-slate-400 mb-8">Utiliza el buscador para localizar rápidamente cualquier recurso, artículo o herramienta de gestión.</p>
+
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="text" id="buscador" placeholder="Buscar artículos y aplicaciones..." 
+                   class="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 text-white rounded-2xl pl-12 pr-4 py-5 shadow-inner focus:outline-none transition placeholder-slate-600 text-lg">
         </div>
-        <input type="text" id="buscador" placeholder="Buscar Artículos y Aplicaciones" class="w-full bg-slate-900/80 border border-slate-800 focus:border-emerald-500 text-white rounded-xl pl-12 pr-4 py-4 shadow-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 transition placeholder-slate-500 text-lg">
     </div>
 
     <section id="articulos" class="scroll-mt-24 search-section">
-        <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-2 section-title">Artículos</h3>
+        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span> Artículos
+        </h3>
         
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div class="searchable-item p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex flex-col justify-between hover:border-slate-700 transition"
@@ -36,19 +44,19 @@ title: Panel
                 </div>
             </div>
         </div>
-
         <div class="no-results hidden mt-8 text-center py-8 text-slate-500 border border-slate-800 border-dashed rounded-2xl bg-slate-900/30">
-            No se han encontrado artículos en esta categoría.
+            No se han encontrado resultados en esta categoría.
         </div>
     </section>
 
     <section id="aplicaciones" class="scroll-mt-24 search-section">
-        
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-slate-800 pb-2 gap-4">
-            <h3 class="text-xl font-bold text-white section-title">Aplicaciones</h3>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+                <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span> Aplicaciones
+            </h3>
             <div class="flex gap-2">
                 <button onclick="document.getElementById('fileImport').click()" class="px-3 py-1.5 text-xs font-medium bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                     Importar Configuración
                 </button>
                 <button onclick="exportarConfig()" class="px-3 py-1.5 text-xs font-medium bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-2">
@@ -59,7 +67,7 @@ title: Panel
             </div>
         </div>
         
-        <p class="text-xs text-slate-500 mb-8 italic section-desc">
+        <p class="text-xs text-slate-500 mb-8 italic">
             Las configuraciones se guardan en tu navegador. Usa los botones superiores para exportar tus ajustes o importar una configuración desde otro equipo o navegador.
         </p>
         
@@ -90,8 +98,11 @@ title: Panel
             {% endfor %}
         </div>
         
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            </div>
+        
         <div class="no-results hidden mt-8 text-center py-8 text-slate-500 border border-slate-800 border-dashed rounded-2xl bg-slate-900/30">
-            No se han encontrado aplicaciones en esta categoría.
+            No se han encontrado resultados en esta categoría.
         </div>
     </section>
 
