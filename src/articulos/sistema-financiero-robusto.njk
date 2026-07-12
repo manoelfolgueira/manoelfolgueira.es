@@ -17,6 +17,39 @@ permalink: /articulos/sistema-financiero-robusto/
             Un sistema financiero no es una cuenta bancaria. Es una arquitectura automatizada, resistente y escalable que protege tu capital y lo pone a trabajar para ti.
         </p>
     </header>
+    
+    <div class="my-12 p-4 bg-slate-900 rounded-2xl border border-slate-800 shadow-inner overflow-x-auto">
+    <h3 class="text-xl font-bold text-white mb-6 text-center">Arquitectura del Sistema Financiero</h3>
+    <pre class="mermaid">
+        graph TD
+            classDef ingresos fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff;
+            classDef gastos fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#fff;
+            classDef motor fill:#065f46,stroke:#10b981,stroke-width:2px,color:#fff;
+            classDef rv fill:#4c1d95,stroke:#8b5cf6,stroke-width:2px,color:#fff;
+            classDef rf fill:#3f3f46,stroke:#a1a1aa,stroke-width:2px,color:#fff;
+            classDef credito fill:#9a3412,stroke:#f97316,stroke-width:2px,color:#fff;
+            classDef hito fill:#854d0e,stroke:#eab308,stroke-width:2px,color:#fff;
+
+            Nomina["[INGRESOS_NETOS]<br/>Salario Base + Ajuste Inflación"]:::ingresos --> Gastos["[GASTOS_FIJOS_ESTRUCTURALES]<br/>Coste de vida mínimo optimizado"]:::gastos
+            Nomina --> Ahorro["[FLUJO_CAJA_LIBRE]<br/>Capacidad de Inversión Periódica"]:::motor
+
+            Ahorro -->|"Fase A: Acumulación Core"| DCASemanal["[SISTEMA_DCA_CRECIENTE]<br/>Aportación Base + [INCREMENTO_FIJO]<br/>+ [PORCENTAJE_INDEXACIÓN_SALARIAL]"]:::motor
+
+            DCASemanal -->|"[ALLOCATION_MAYORITARIO]"| Global["[ACTIVO_CORE_PRINCIPAL]<br/>Motor Renta Variable Principal"]:::rv
+            DCASemanal -->|"[ALLOCATION_MINORITARIO]"| Emergentes["[ACTIVO_CORE_SECUNDARIO]<br/>Factor Diversificador Geográfico/Divisa"]:::rv
+            DCASemanal -.->|"[EXCEDENTE_LIQUIDEZ]"| RentaFija["[ACTIVO_DEFENSIVO]<br/>Cubo de Seguridad: Renta Fija / Monetario"]:::rf
+
+            Global & Emergentes -.->|"[COLATERAL_LTV_SEGURO]"| LineaCredito["[LÍNEA_CRÉDITO_LOMBARDO]<br/>Deuda garantizada a bajo interés"]:::credito
+            LineaCredito == "[ALERTA_DRAWDOWN_SEVERO]" ==> CompraSuelo["[INTERVENCIÓN_TÁCTICA]<br/>Inyección instantánea de liquidez en valles"]:::motor
+            CompraSuelo --> Global
+            CompraSuelo --> Emergentes
+            RentaFija -.->|"[LIQUIDACIÓN_DIFERIDA]"| LineaCredito
+
+            Global & Emergentes ==>|"[AÑO_OBJETIVO_1]"| Coche["[HITO_BIEN_CONSUMO]<br/>Financiación sin venta vía Pignoración"]:::hito
+            Global & Emergentes ==>|"[AÑO_OBJETIVO_2]"| Reforma["[HITO_PATRIMONIAL]<br/>Optimización/Reforma Inmobiliaria"]:::hito
+            Global & Emergentes ==>|"[AÑO_JUBILACIÓN]"| Jubilacion["[OBJETIVO_FIRE]<br/>Patrimonio Objetivo: [CÁLCULO_RETIRO_REGLA_4%]<br/>+ Puente Hacia Pensión Pública"]:::hito
+    </pre>
+</div>
 
     <div class="space-y-16 text-slate-300 text-lg leading-relaxed">
 
